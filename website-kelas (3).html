@@ -1,0 +1,2527 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kelas XI-F5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EAF2FB;
+    --paper-2:#D8E8F8;
+    --navy:#123A66;
+    --navy-2:#0A2544;
+    --sky:#2F6FED;
+    --mustard:#E3A008;
+    --coral:#D6483A;
+    --sage:#4C8C6B;
+    --ink:#16273D;
+    --ink-soft:#4C6079;
+    --line: rgba(18,58,102,0.16);
+    --font-hand:'Kalam', cursive;
+    --font-body:'Plus Jakarta Sans', sans-serif;
+    --font-mono:'Space Mono', monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:var(--font-body);
+    background:var(--paper);
+    color:var(--ink);
+    overflow-x:hidden;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}
+  }
+
+  /* ---------- paper texture ---------- */
+  .grain{
+    position:fixed; inset:0; pointer-events:none; z-index:2; opacity:0.05; mix-blend-mode:multiply;
+    background-image:radial-gradient(circle at 1px 1px, #000 1px, transparent 0);
+    background-size:4px 4px;
+  }
+
+  /* ---------- INTRO ---------- */
+  #intro{
+    position:fixed; inset:0; background:var(--navy); z-index:1000;
+    display:flex; align-items:center; justify-content:center; flex-direction:column;
+    transition:transform 1s cubic-bezier(.7,0,.2,1), opacity 0.8s ease;
+  }
+  #intro.hide{ transform:translateY(-100%); opacity:0.6; pointer-events:none; }
+  .chalk-wrap{ text-align:center; padding:0 20px; }
+  .chalk-line{
+    font-family:var(--font-hand); color:#fff; font-size:clamp(2rem,7vw,4.2rem);
+    font-weight:700; overflow:hidden; white-space:nowrap; border-right:3px solid var(--sky);
+    width:0; margin:0 auto;
+    animation: typewriter 1.6s steps(14) forwards, blink 0.7s step-end infinite;
+  }
+  .chalk-sub{
+    font-family:var(--font-mono); color:var(--sky); font-size:0.85rem; letter-spacing:0.3em;
+    text-transform:uppercase; margin-top:18px; opacity:0; animation:fadeUp 0.8s ease 1.8s forwards;
+  }
+  @keyframes typewriter{ from{width:0} to{width:14ch} }
+  @keyframes blink{ 50%{ border-color:transparent } }
+  @keyframes fadeUp{ from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:translateY(0)} }
+  .chalk-dust{
+    position:absolute; inset:0; overflow:hidden; pointer-events:none;
+  }
+  .dot{ position:absolute; width:4px; height:4px; background:rgba(255,255,255,0.5); border-radius:50%; animation:float 4s linear infinite; }
+
+  /* ---------- NAV / HEADER ---------- */
+  nav{
+    position:sticky; top:0; z-index:100; background:var(--navy);
+    box-shadow:0 3px 16px rgba(6,20,40,0.28);
+  }
+  .nav-inner{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    max-width:1080px; margin:0 auto; padding:0 24px; position:relative;
+  }
+  .nav-brand{
+    display:flex; align-items:center; gap:9px; font-family:var(--font-hand); font-weight:700;
+    font-size:1.25rem; color:#fff; text-decoration:none; padding:14px 0; flex-shrink:0;
+  }
+  .nav-brand .brand-dot{
+    width:9px; height:9px; border-radius:50%; background:var(--sky); flex-shrink:0;
+    box-shadow:0 0 0 4px rgba(47,111,237,0.25);
+  }
+  .nav-links{ display:flex; flex-wrap:wrap; justify-content:center; }
+  nav a.nav-link{
+    font-family:var(--font-mono); font-size:0.75rem; letter-spacing:0.08em; text-transform:uppercase;
+    color:rgba(255,255,255,0.72); text-decoration:none; padding:19px 16px;
+    position:relative; transition:color 0.2s;
+  }
+  nav a.nav-link:hover, nav a.nav-link:focus-visible{ color:#fff; }
+  nav a.nav-link::after{
+    content:''; position:absolute; left:16px; right:16px; bottom:11px; height:2px; background:var(--sky);
+    transform:scaleX(0); transform-origin:left; transition:transform 0.25s;
+  }
+  nav a.nav-link:hover::after{ transform:scaleX(1); }
+
+  /* Tombol hamburger — hanya tampil di layar mobile */
+  .nav-toggle{
+    display:none; flex-direction:column; justify-content:center; gap:5px; width:34px; height:34px;
+    background:none; border:none; cursor:pointer; padding:0; flex-shrink:0;
+  }
+  .nav-toggle span{
+    display:block; width:100%; height:2px; background:#fff; border-radius:2px;
+    transition:transform 0.25s ease, opacity 0.2s ease;
+  }
+  .nav-toggle.open span:nth-child(1){ transform:translateY(7px) rotate(45deg); }
+  .nav-toggle.open span:nth-child(2){ opacity:0; }
+  .nav-toggle.open span:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
+
+  @media (max-width:680px){
+    .nav-inner{ padding:0 16px; }
+    .nav-toggle{ display:flex; }
+    .nav-links{
+      display:flex; flex-direction:column; gap:3px;
+      position:absolute; top:calc(100% + 12px); left:14px; right:14px;
+      background:var(--navy-2); border-radius:16px; padding:10px;
+      border:1px solid rgba(255,255,255,0.09);
+      box-shadow:0 20px 40px rgba(4,14,28,0.45);
+      opacity:0; visibility:hidden; transform:translateY(-10px) scale(0.98);
+      pointer-events:none;
+      transition:opacity 0.22s ease, transform 0.22s ease, visibility 0s linear 0.22s;
+    }
+    .nav-links.open{
+      opacity:1; visibility:visible; transform:translateY(0) scale(1); pointer-events:auto;
+      transition:opacity 0.22s ease, transform 0.22s ease;
+    }
+    nav a.nav-link{
+      display:flex; align-items:center; gap:11px; width:100%; text-align:left;
+      padding:13px 14px; border-top:none; border-radius:11px;
+      font-family:var(--font-body); text-transform:none; letter-spacing:0;
+      font-size:0.94rem; font-weight:600; color:rgba(255,255,255,0.85);
+    }
+    nav a.nav-link .nav-icon{ display:inline-block; font-size:1.05rem; line-height:1; }
+    nav a.nav-link::after{ display:none; }
+    nav a.nav-link:hover, nav a.nav-link:focus-visible{ background:rgba(255,255,255,0.09); color:#fff; }
+    nav a.nav-link:active{ background:rgba(47,111,237,0.35); }
+  }
+  .nav-icon{ display:none; }
+
+
+  section{ padding:90px 24px; max-width:1080px; margin:0 auto; position:relative; }
+  .eyebrow{
+    font-family:var(--font-mono); font-size:0.75rem; letter-spacing:0.25em; text-transform:uppercase;
+    color:var(--sky); display:inline-block; margin-bottom:14px;
+  }
+  h2{
+    font-family:var(--font-hand); font-size:clamp(2rem,5vw,3rem); color:var(--navy); font-weight:700;
+    margin-bottom:8px; text-align:center;
+  }
+  .sub{ color:var(--ink-soft); max-width:560px; line-height:1.6; margin-bottom:48px; }
+
+  /* ---------- HERO / KATA PENGANTAR ---------- */
+  #beranda{ padding-top:70px; text-align:center; }
+  .logo-wrap{ display:flex; justify-content:center; margin-bottom:28px; }
+  .logo{ width:120px; height:120px; }
+  .hero-title{ font-family:var(--font-hand); font-size:clamp(2.4rem,7vw,4rem); color:var(--navy); line-height:1.1; }
+  .hero-title span{ color:var(--sky); }
+  .hero-text{
+    max-width:620px; margin:24px auto 0; color:var(--ink-soft); line-height:1.8; font-size:1.05rem;
+    background:var(--paper-2); border:1px solid var(--line); border-radius:2px; padding:28px 32px;
+    position:relative; text-align:left;
+  }
+  .hero-text::before{
+    content:'“'; font-family:var(--font-hand); font-size:4rem; color:var(--sky); position:absolute;
+    top:-18px; left:16px; line-height:1;
+  }
+  .pin{
+    position:absolute; width:14px; height:14px; background:var(--sky); border-radius:50%;
+    box-shadow:0 2px 4px rgba(0,0,0,0.3); left:50%; top:-8px; transform:translateX(-50%);
+  }
+
+  /* ---------- STRUKTUR ---------- */
+  .teacher-card{
+    display:flex; align-items:center; gap:24px; background:var(--navy); color:#fff; border-radius:4px;
+    padding:26px 30px; margin-bottom:44px; cursor:pointer; transition:transform 0.2s;
+  }
+  .teacher-card:hover{ transform:translateY(-3px); }
+  .teacher-card .avatar{ width:78px; height:78px; font-size:1.6rem; flex-shrink:0; }
+  .teacher-card h3{ font-family:var(--font-hand); font-size:1.5rem; }
+  .teacher-card p{ font-family:var(--font-mono); font-size:0.75rem; color:var(--mustard); letter-spacing:0.1em; text-transform:uppercase; margin-top:4px;}
+
+  .pengurus-grid{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(160px,1fr)); gap:20px;
+  }
+  .id-card{
+    background:#fff; border:1px solid var(--line); border-radius:6px; padding:20px 16px 18px;
+    text-align:center; cursor:pointer; position:relative; transition:transform 0.2s, box-shadow 0.2s;
+    box-shadow:0 1px 2px rgba(0,0,0,0.04);
+  }
+  .id-card:hover, .id-card:focus-visible{
+    transform:translateY(-5px) rotate(-1deg); box-shadow:0 12px 20px -8px rgba(31,58,95,0.25);
+    outline:none;
+  }
+  .id-card::before{
+    content:''; position:absolute; top:-6px; left:50%; transform:translateX(-50%); width:26px; height:10px;
+    background:silver; border-radius:2px; box-shadow:0 1px 2px rgba(0,0,0,0.3);
+  }
+  .avatar{
+    width:64px; height:64px; border-radius:50%; margin:0 auto 12px; display:flex; align-items:center;
+    justify-content:center; font-family:var(--font-hand); font-weight:700; font-size:1.3rem; color:#fff;
+    object-fit:cover;
+  }
+  .id-card h4{ font-size:0.95rem; font-weight:700; color:var(--ink); }
+  .id-card .role{
+    font-family:var(--font-mono); font-size:0.68rem; color:var(--sky); text-transform:uppercase;
+    letter-spacing:0.06em; margin-top:4px;
+  }
+
+  /* ---------- ANGGOTA ---------- */
+  .anggota-grid{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(96px,1fr)); gap:14px;
+  }
+  .mini{
+    text-align:center; cursor:pointer; padding:10px 4px; border-radius:6px; transition:background 0.2s, transform 0.2s;
+    position:relative;
+  }
+  .music-badge{
+    position:absolute; top:2px; right:6px; font-size:0.85rem; line-height:1;
+    filter:drop-shadow(0 1px 2px rgba(0,0,0,0.25)); animation:floatY 2.4s ease-in-out infinite;
+    pointer-events:none;
+  }
+  .mini:hover, .mini:focus-visible{ background:var(--paper-2); transform:translateY(-3px); outline:none; }
+  .mini .avatar{ width:52px; height:52px; font-size:1rem; margin-bottom:8px; }
+  .mini .num{ font-family:var(--font-mono); font-size:0.62rem; color:var(--ink-soft); }
+  .mini .name{ font-size:0.78rem; font-weight:600; line-height:1.25; margin-top:2px; }
+  .mini .tag{ font-family:var(--font-mono); font-size:0.58rem; color:var(--sky); text-transform:uppercase; letter-spacing:0.04em; margin-top:2px; }
+
+  /* ---------- GALERI ---------- */
+  .galeri-grid{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(160px,1fr)); gap:22px;
+  }
+  .polaroid{
+    background:#fff; padding:10px 10px 34px; border-radius:2px; box-shadow:0 6px 14px rgba(0,0,0,0.12);
+    cursor:pointer; transition:transform 0.25s ease; position:relative;
+  }
+  .polaroid:nth-child(odd){ transform:rotate(-2deg); }
+  .polaroid:nth-child(even){ transform:rotate(2deg); }
+  .polaroid:hover, .polaroid:focus-visible{ transform:scale(1.05) rotate(0deg); z-index:5; outline:none; }
+  .polaroid img{ width:100%; display:block; aspect-ratio:1/1; object-fit:cover; background:var(--paper-2); }
+  .polaroid figcaption{
+    font-family:var(--font-hand); font-size:0.9rem; color:var(--ink-soft); text-align:center; margin-top:8px;
+  }
+  .tape{
+    position:absolute; top:-10px; left:50%; transform:translateX(-50%) rotate(-3deg); width:50px; height:18px;
+    background:rgba(227,160,8,0.55); border:1px solid rgba(227,160,8,0.7);
+  }
+
+  /* ---------- MODAL ---------- */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(22,40,63,0.72); z-index:200; display:flex; align-items:center;
+    justify-content:center; padding:24px; opacity:0; pointer-events:none; transition:opacity 0.25s ease;
+  }
+  .modal-overlay.open{ opacity:1; pointer-events:auto; }
+  .note{
+    background:#FDF7E3; max-width:380px; width:100%; padding:36px 30px 30px; border-radius:2px;
+    position:relative; box-shadow:0 20px 50px rgba(0,0,0,0.4); transform:scale(0.9) translateY(20px);
+    transition:transform 0.25s ease;
+  }
+  .modal-overlay.open .note{ transform:scale(1) translateY(0); }
+  .note::before{
+    content:''; position:absolute; top:-8px; left:50%; transform:translateX(-50%) rotate(-2deg); width:34px;
+    height:14px; background:rgba(228,87,46,0.6); border:1px solid rgba(228,87,46,0.8);
+  }
+  .note .avatar{ width:84px; height:84px; font-size:1.8rem; margin:0 auto 16px; }
+  .note h3{ font-family:var(--font-hand); font-size:1.6rem; text-align:center; color:var(--navy); }
+  .note .role{ text-align:center; font-family:var(--font-mono); font-size:0.7rem; color:var(--sky); text-transform:uppercase; letter-spacing:0.08em; margin-top:4px; }
+  .note .quote{ font-family:var(--font-hand); font-size:1.15rem; color:var(--ink); text-align:center; margin-top:18px; line-height:1.5; }
+  .modal-music{ margin-top:6px; }
+  .modal-music:empty{ margin-top:0; }
+  .modal-music .music-label{
+    font-family:var(--font-mono); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.08em;
+    color:var(--sky); text-align:center; margin:18px 0 8px;
+  }
+  .modal-music iframe{ display:block; width:100%; border:none; }
+  .close-btn{
+    position:absolute; top:10px; right:12px; background:none; border:none; font-size:1.3rem; cursor:pointer;
+    color:var(--ink-soft); line-height:1; padding:6px;
+  }
+  .close-btn:hover{ color:var(--sky); }
+
+  .lightbox{
+    position:fixed; inset:0; background:rgba(15,20,26,0.92); z-index:200; display:flex; align-items:center;
+    justify-content:center; padding:24px; opacity:0; pointer-events:none; transition:opacity 0.25s ease;
+  }
+  .lightbox.open{ opacity:1; pointer-events:auto; }
+  .lightbox img{ max-width:min(90vw,640px); max-height:80vh; border-radius:4px; box-shadow:0 20px 60px rgba(0,0,0,0.5); }
+  .lightbox figcaption{ color:#fff; font-family:var(--font-hand); font-size:1.1rem; text-align:center; margin-top:14px; }
+
+  footer{ text-align:center; padding:40px 24px 60px; font-family:var(--font-mono); font-size:0.72rem; color:var(--ink-soft); letter-spacing:0.05em; }
+
+  /* ---------- ADMIN ---------- */
+  .admin-fab{
+    position:fixed; bottom:20px; right:20px; z-index:150; background:var(--navy); color:#fff; border:none;
+    border-radius:30px; padding:11px 18px; font-family:var(--font-mono); font-size:0.7rem; letter-spacing:0.05em;
+    text-transform:uppercase; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.25); transition:background 0.2s, transform 0.2s;
+  }
+  .admin-fab:hover{ background:var(--navy-2); transform:translateY(-2px); }
+
+  .admin-modal input[type=text], .admin-modal input[type=password]{
+    width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:4px; font-family:var(--font-body);
+    font-size:0.9rem; margin-top:6px; margin-bottom:14px; background:#fff;
+  }
+  .admin-modal label{ font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--ink-soft); }
+  .btn-primary{
+    width:100%; padding:11px; background:var(--sky); color:#fff; border:none; border-radius:4px;
+    font-family:var(--font-mono); font-size:0.78rem; text-transform:uppercase; letter-spacing:0.05em; cursor:pointer;
+  }
+  .btn-primary:hover{ background:var(--navy); }
+  .admin-error{ color:var(--coral); font-size:0.8rem; margin:-8px 0 12px; display:none; }
+
+  .panel-overlay{
+    position:fixed; inset:0; background:rgba(22,40,63,0.72); z-index:250; display:flex; align-items:center;
+    justify-content:center; padding:20px; opacity:0; pointer-events:none; transition:opacity 0.25s ease;
+  }
+  .panel-overlay.open{ opacity:1; pointer-events:auto; }
+  .panel-box{
+    background:var(--paper); width:100%; max-width:820px; max-height:86vh; overflow-y:auto; border-radius:6px;
+    box-shadow:0 24px 60px rgba(0,0,0,0.4); padding:28px 26px 34px; position:relative;
+  }
+  .panel-box h3{ font-family:var(--font-hand); color:var(--navy); font-size:1.6rem; margin-bottom:4px; }
+  .panel-tabs{ display:flex; gap:6px; margin:18px 0 20px; flex-wrap:wrap; }
+  .panel-tab{
+    font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.05em;
+    padding:8px 14px; border:1px solid var(--line); border-radius:20px; background:#fff; cursor:pointer; color:var(--ink-soft);
+  }
+  .panel-tab.active{ background:var(--navy); color:#fff; border-color:var(--navy); }
+  .panel-section{ display:none; }
+  .panel-section.active{ display:block; }
+  .admin-row{ display:flex; align-items:center; gap:14px; padding:10px 0; border-bottom:1px solid var(--line); }
+  .admin-row .avatar{ width:44px; height:44px; font-size:0.8rem; flex-shrink:0; }
+  .admin-row .info{ flex:1; min-width:0; }
+  .admin-row .info h5{ font-size:0.85rem; }
+  .admin-row .info span{ font-family:var(--font-mono); font-size:0.62rem; color:var(--sky); text-transform:uppercase; }
+  .admin-row input[type=file]{ font-size:0.72rem; max-width:150px; }
+  .admin-row input[type=text]{
+    padding:7px 9px; border:1px solid var(--line); border-radius:4px; font-family:var(--font-body);
+    font-size:0.78rem; background:#fff;
+  }
+  .search-box{ width:100%; padding:9px 12px; border:1px solid var(--line); border-radius:4px; margin-bottom:14px; font-family:var(--font-body); }
+  .gal-admin-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(140px,1fr)); gap:16px; }
+  .gal-admin-card{ background:#fff; border:1px solid var(--line); border-radius:6px; padding:10px; text-align:center; }
+  .gal-admin-card img{ width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:4px; margin-bottom:8px; background:var(--paper-2); }
+  .gal-admin-card input[type=text]{ font-size:0.75rem; padding:6px 8px; margin-bottom:6px; }
+  .gal-admin-card input[type=file]{ font-size:0.65rem; width:100%; margin-bottom:6px; }
+  .btn-small{
+    font-family:var(--font-mono); font-size:0.62rem; text-transform:uppercase; padding:5px 10px; border-radius:14px;
+    border:1px solid var(--line); background:#fff; cursor:pointer; color:var(--ink-soft);
+  }
+  .btn-small.danger{ color:var(--coral); border-color:var(--coral); }
+  .panel-close{ position:absolute; top:14px; right:16px; background:none; border:none; font-size:1.3rem; cursor:pointer; color:var(--ink-soft); }
+  .admin-logout{ font-family:var(--font-mono); font-size:0.68rem; text-transform:uppercase; color:var(--sky); background:none; border:none; cursor:pointer; text-decoration:underline; }
+  .admin-status{ font-family:var(--font-mono); font-size:0.68rem; color:var(--sage); margin-top:10px; display:none; }
+  .upload-hint{ font-size:0.7rem; color:var(--ink-soft); margin-top:-10px; margin-bottom:14px; }
+
+  /* ---------- KOMENTAR & RATING ---------- */
+  .rating-summary{ display:flex; align-items:center; gap:16px; margin-bottom:32px; }
+  .rating-summary .avg-num{ font-family:var(--font-hand); font-size:2.6rem; color:var(--navy); line-height:1; }
+  .rating-summary .avg-stars{ color:var(--mustard); font-size:1.3rem; letter-spacing:2px; }
+  .rating-summary .avg-count{ font-family:var(--font-mono); font-size:0.7rem; color:var(--ink-soft); margin-top:2px; }
+
+  .comment-form{
+    background:var(--paper-2); border:1px solid var(--line); border-radius:6px; padding:24px;
+    max-width:480px; margin-bottom:40px;
+  }
+  .comment-form input[type=text], .comment-form textarea{
+    width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:4px; font-family:var(--font-body);
+    font-size:0.9rem; margin-bottom:14px; background:#fff; resize:vertical;
+  }
+  .star-picker{ font-size:1.7rem; color:var(--line); cursor:pointer; margin-bottom:14px; letter-spacing:4px; user-select:none; }
+  .star-picker span{ transition:color 0.15s; }
+  .star-picker span.active{ color:var(--mustard); }
+
+  .comment-list{ display:flex; flex-direction:column; gap:16px; max-width:640px; }
+  .comment-card{ background:#fff; border:1px solid var(--line); border-radius:6px; padding:16px 18px; }
+  .comment-card .head{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:6px; flex-wrap:wrap; }
+  .comment-card .name{ font-weight:700; font-size:0.9rem; color:var(--ink); }
+  .comment-card .stars{ color:var(--mustard); font-size:0.85rem; letter-spacing:1px; white-space:nowrap; }
+  .comment-card .text{ color:var(--ink-soft); font-size:0.88rem; line-height:1.55; word-break:break-word; }
+  .comment-card .time{ font-family:var(--font-mono); font-size:0.62rem; color:var(--ink-soft); margin-top:8px; }
+
+  /* ---------- ACHIEVEMENT ---------- */
+  .achieve-grid{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:20px;
+  }
+  .achieve-card{
+    background:#fff; border:1px solid var(--line); border-radius:8px; padding:24px 20px 20px;
+    text-align:center; position:relative; transition:transform 0.2s, box-shadow 0.2s;
+  }
+  .achieve-card:hover{ transform:translateY(-5px); box-shadow:0 12px 20px -8px rgba(31,58,95,0.25); }
+  .achieve-year{
+    position:absolute; top:14px; right:16px; font-family:var(--font-mono); font-size:0.62rem; color:var(--ink-soft);
+  }
+  .achieve-icon{ font-size:2.1rem; margin-bottom:10px; }
+  .achieve-card h4{ font-family:var(--font-hand); color:var(--navy); font-size:1.2rem; line-height:1.25; }
+  .achieve-level{
+    display:inline-block; font-family:var(--font-mono); font-size:0.62rem; text-transform:uppercase;
+    letter-spacing:0.06em; color:#fff; background:var(--sky); padding:3px 10px; border-radius:12px; margin:8px 0 10px;
+  }
+  .achieve-desc{ font-size:0.82rem; color:var(--ink-soft); line-height:1.55; }
+
+  /* ---------- MAPEL & PIKET ---------- */
+  .jadwal-grid{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:22px;
+  }
+  .jadwal-card{
+    background:#fff; border:1px solid var(--line); border-radius:8px; padding:22px 22px 24px; position:relative;
+  }
+  .jadwal-card::before{
+    content:''; position:absolute; top:0; left:22px; right:22px; height:4px; background:var(--sky); border-radius:0 0 4px 4px;
+  }
+  .jadwal-card h4{ font-family:var(--font-hand); color:var(--navy); font-size:1.4rem; margin-top:6px; }
+  .jadwal-card .hari-tag{
+    font-family:var(--font-mono); font-size:0.62rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--sky);
+  }
+  .mapel-list{ list-style:none; margin:14px 0 0; }
+  .mapel-list li{
+    display:flex; justify-content:space-between; gap:10px; padding:8px 0; border-bottom:1px dashed var(--line); font-size:0.85rem;
+  }
+  .mapel-list li:last-child{ border-bottom:none; }
+  .mapel-list .jam{ font-family:var(--font-mono); font-size:0.68rem; color:var(--ink-soft); white-space:nowrap; }
+  .mapel-list .nama-mapel{ font-weight:600; color:var(--ink); text-align:right; }
+  .piket-box{ background:var(--paper-2); border-radius:6px; padding:14px 16px; margin-top:16px; }
+  .piket-box .piket-label{
+    font-family:var(--font-mono); font-size:0.62rem; text-transform:uppercase; color:var(--sky); letter-spacing:0.07em; margin-bottom:6px;
+  }
+  .piket-names{ font-size:0.82rem; color:var(--ink); line-height:1.6; }
+
+  /* ======================================================= */
+  /* ==============  ANIMASI TAMBAHAN (BANYAK)  ============= */
+  /* ======================================================= */
+
+  /* dust dot di intro — melengkapi animasi yang sudah dirujuk */
+  @keyframes float{
+    0%{ transform:translateY(0) translateX(0); opacity:0; }
+    10%{ opacity:0.8; }
+    90%{ opacity:0.4; }
+    100%{ transform:translateY(-90px) translateX(12px); opacity:0; }
+  }
+
+  @keyframes fadeInUp{ from{opacity:0; transform:translateY(46px);} to{opacity:1; transform:translateY(0);} }
+  @keyframes fadeInLeft{ from{opacity:0; transform:translateX(-54px);} to{opacity:1; transform:translateX(0);} }
+  @keyframes fadeInRight{ from{opacity:0; transform:translateX(54px);} to{opacity:1; transform:translateX(0);} }
+  @keyframes zoomPop{ 0%{opacity:0; transform:scale(0.6) rotate(-4deg);} 70%{opacity:1; transform:scale(1.06) rotate(1deg);} 100%{opacity:1; transform:scale(1) rotate(0);} }
+  @keyframes floatY{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-9px); } }
+  @keyframes floatYBig{ 0%,100%{ transform:translateY(0) rotate(0deg); } 50%{ transform:translateY(-18px) rotate(3deg); } }
+  @keyframes wiggle{ 0%,100%{ transform:rotate(0); } 25%{ transform:rotate(-4deg); } 75%{ transform:rotate(4deg); } }
+  @keyframes pulseGlow{ 0%,100%{ box-shadow:0 0 0 0 rgba(47,111,237,0.35); } 50%{ box-shadow:0 0 0 9px rgba(47,111,237,0); } }
+  @keyframes spinSlow{ from{ transform:rotate(0); } to{ transform:rotate(360deg); } }
+  @keyframes gradientShift{ 0%{ background-position:0% 50%; } 50%{ background-position:100% 50%; } 100%{ background-position:0% 50%; } }
+  @keyframes shimmerLine{ 0%{ background-position:-160% 0; } 100%{ background-position:160% 0; } }
+  @keyframes bobRotate{ 0%,100%{ transform:translateY(0) rotate(-2deg); } 50%{ transform:translateY(-6px) rotate(2deg); } }
+  @keyframes badgePop{ 0%{ transform:scale(0); } 60%{ transform:scale(1.15); } 100%{ transform:scale(1); } }
+  @keyframes underlineGrow{ from{ transform:scaleX(0); } to{ transform:scaleX(1); } }
+  @keyframes fabPulse{ 0%,100%{ box-shadow:0 4px 12px rgba(0,0,0,0.25), 0 0 0 0 rgba(47,111,237,0.5); } 50%{ box-shadow:0 4px 12px rgba(0,0,0,0.25), 0 0 0 12px rgba(47,111,237,0); } }
+  @keyframes starPop{ 0%{ transform:scale(1); } 40%{ transform:scale(1.4) rotate(-10deg); } 100%{ transform:scale(1) rotate(0); } }
+
+  /* ---------- scroll-reveal base classes (diaktifkan via IntersectionObserver) ---------- */
+  .reveal{ opacity:0; transform:translateY(46px); transition:opacity 0.75s cubic-bezier(.2,.7,.3,1), transform 0.75s cubic-bezier(.2,.7,.3,1); }
+  .reveal.in-view{ opacity:1; transform:translateY(0); }
+  .reveal-left{ opacity:0; transform:translateX(-54px); transition:opacity 0.7s ease, transform 0.7s ease; }
+  .reveal-left.in-view{ opacity:1; transform:translateX(0); }
+  .reveal-right{ opacity:0; transform:translateX(54px); transition:opacity 0.7s ease, transform 0.7s ease; }
+  .reveal-right.in-view{ opacity:1; transform:translateX(0); }
+  .reveal-zoom{ opacity:0; transform:scale(0.72) rotate(-2deg); transition:opacity 0.55s ease, transform 0.55s cubic-bezier(.3,1.4,.5,1); }
+  .reveal-zoom.in-view{ opacity:1; transform:scale(1) rotate(0deg); }
+
+  /* ---------- gerakan idle yang terus berulang ---------- */
+  .logo{ animation:floatY 3.4s ease-in-out infinite; }
+  .nav-brand .brand-dot{ animation:pulseGlow 2.1s ease-in-out infinite; }
+  .admin-fab{ animation:fabPulse 2.6s ease-in-out infinite; }
+  .pin{ animation:bobRotate 2.8s ease-in-out infinite; transform-origin:top center; }
+  .eyebrow{
+    background:linear-gradient(90deg, var(--sky) 0%, var(--mustard) 50%, var(--sky) 100%);
+    background-size:220% auto; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+    animation:gradientShift 3.2s linear infinite;
+  }
+
+  /* ---------- hover flair tambahan ---------- */
+  .id-card, .mini, .teacher-card, .jadwal-card, .polaroid, .comment-item, .rating-summary{
+    transition:transform 0.3s cubic-bezier(.2,.8,.3,1), box-shadow 0.3s ease;
+  }
+  .id-card:hover{ animation:wiggle 0.45s ease; }
+  .id-card:hover .avatar, .mini:hover .avatar, .teacher-card:hover .avatar{ animation:badgePop 0.4s ease; }
+  .jadwal-card:hover{ transform:translateY(-7px) scale(1.015); box-shadow:0 18px 32px -12px rgba(31,58,95,0.32); }
+  .jadwal-card{ transition:transform 0.3s ease, box-shadow 0.3s ease; }
+  .hari-tag{ transition:transform 0.25s ease; }
+  .jadwal-card:hover .hari-tag{ transform:scale(1.08) rotate(-2deg); }
+  .btn-primary, .btn-small, #submitCommentBtn, .admin-fab, #addGalBtn, .panel-tab{
+    transition:transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .btn-primary:hover, .btn-small:hover, .panel-tab:hover{ transform:translateY(-2px) scale(1.03); }
+  .btn-primary:active, .btn-small:active{ transform:scale(0.95); }
+  .panel-tab.active{ animation:zoomPop 0.35s ease; }
+  #starPicker span{ display:inline-block; transition:transform 0.15s ease, color 0.15s ease; cursor:pointer; }
+  #starPicker span:hover, #starPicker span.active{ animation:starPop 0.35s ease; color:var(--mustard); }
+  .close-btn, .panel-close{ transition:transform 0.25s ease; }
+  .close-btn:hover, .panel-close:hover{ transform:rotate(90deg) scale(1.15); }
+
+  /* garis bawah animasi tumbuh di judul section */
+  h2{ position:relative; }
+  h2::after{
+    content:''; position:absolute; left:50%; bottom:-8px; height:3px; width:64px; border-radius:3px;
+    background:linear-gradient(90deg, var(--sky), var(--mustard));
+    transform:translateX(-50%) scaleX(0); transform-origin:center;
+    animation:underlineGrowCenter 0.8s ease forwards; animation-delay:0.15s;
+  }
+  @keyframes underlineGrowCenter{
+    from{ transform:translateX(-50%) scaleX(0); }
+    to{ transform:translateX(-50%) scaleX(1); }
+  }
+
+  /* stagger halus untuk grid — dikombinasikan dengan class reveal-zoom dari JS */
+  .pengurus-grid > *, .anggota-grid > *, .galeri-grid > *{ will-change:transform, opacity; }
+
+  /* efek terapung lembut untuk polaroid & kartu, jalan terus tanpa perlu scroll */
+  .polaroid{ animation:floatY 5s ease-in-out infinite; }
+  .polaroid:nth-child(2n){ animation-duration:6.2s; animation-delay:0.4s; }
+  .polaroid:nth-child(3n){ animation-duration:4.4s; animation-delay:0.8s; }
+  .polaroid:hover{ animation-play-state:paused; }
+
+  /* bentuk dekoratif melayang di background halaman */
+  .bg-shape{
+    position:fixed; border-radius:50%; pointer-events:none; z-index:0; opacity:0.10; filter:blur(1px);
+  }
+  .bg-shape.s1{ width:260px; height:260px; background:var(--sky); top:6%; left:-90px; animation:floatYBig 9s ease-in-out infinite; }
+  .bg-shape.s2{ width:180px; height:180px; background:var(--mustard); top:38%; right:-70px; animation:floatYBig 11s ease-in-out infinite reverse; }
+  .bg-shape.s3{ width:220px; height:220px; background:var(--coral); bottom:8%; left:6%; animation:floatYBig 13s ease-in-out infinite; }
+  .bg-shape.s4{ width:140px; height:140px; background:var(--sage); bottom:30%; right:10%; animation:floatYBig 8s ease-in-out infinite reverse; }
+
+  section{ position:relative; z-index:1; }
+
+  @media (max-width:680px){ .bg-shape{ display:none; } }
+
+  /* ======================================================= */
+  /* ==========  INTERAKSI TAMBAHAN: CURSOR, TILT,  ========= */
+  /* ==========  CONFETTI, SOUND, EASTER EGG DLL   ========= */
+  /* ======================================================= */
+
+  /* ---------- kursor kustom (hanya di device dengan mouse) ---------- */
+  @media (hover:hover) and (pointer:fine){
+    body{ cursor:none; }
+    #cursorDot, #cursorRing{
+      position:fixed; top:0; left:0; pointer-events:none; z-index:9998;
+      border-radius:50%; transform:translate(-50%,-50%);
+    }
+    #cursorDot{ width:7px; height:7px; background:var(--sky); }
+    #cursorRing{
+      width:32px; height:32px; border:1.5px solid rgba(47,111,237,0.55);
+      transition:width 0.18s ease, height 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    }
+    #cursorRing.active{ width:50px; height:50px; border-color:var(--mustard); background:rgba(227,160,8,0.08); }
+    #cursorRing.press{ width:26px; height:26px; }
+  }
+
+  /* ---------- jejak kapur mengikuti kursor ---------- */
+  .chalk-trail{ position:fixed; z-index:9997; pointer-events:none; border-radius:50%; background:rgba(47,111,237,0.45); }
+  @keyframes chalkFade{ to{ opacity:0; transform:translate(-50%,-50%) scale(0.2); } }
+
+  /* ---------- confetti ---------- */
+  .confetti-piece{ position:fixed; z-index:9999; pointer-events:none; border-radius:1px; top:0; left:0;
+    animation:confettiFall 900ms cubic-bezier(.15,.7,.4,1) forwards; }
+  @keyframes confettiFall{
+    0%{ transform:translate(0,0) rotate(0deg); opacity:1; }
+    100%{ transform:translate(var(--dx), calc(var(--dy) + 170px)) rotate(var(--rot)); opacity:0; }
+  }
+
+  /* ---------- toast mini (notifikasi easter egg dll) ---------- */
+  .mini-toast{
+    position:fixed; left:50%; bottom:28px; transform:translateX(-50%) translateY(20px); z-index:9999;
+    background:var(--navy); color:#fff; font-family:var(--font-hand); font-size:1.05rem; padding:12px 22px;
+    border-radius:30px; box-shadow:0 10px 30px rgba(0,0,0,0.3); opacity:0; pointer-events:none;
+    transition:opacity 0.3s ease, transform 0.3s ease;
+  }
+  .mini-toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  /* ---------- tombol suara ---------- */
+  .sound-fab{
+    position:fixed; bottom:20px; left:20px; z-index:150; background:var(--navy); color:#fff; border:none;
+    width:44px; height:44px; border-radius:50%; font-size:1.05rem; cursor:pointer;
+    box-shadow:0 4px 12px rgba(0,0,0,0.25); transition:transform 0.2s ease, background 0.2s ease;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .sound-fab:hover{ transform:translateY(-2px) scale(1.06); background:var(--navy-2); }
+  .sound-fab:active{ transform:scale(0.92); }
+
+  /* ---------- target tilt 3D butuh transform-style ---------- */
+  .id-card, .teacher-card, .achieve-card, .jadwal-card, .polaroid{ transform-style:preserve-3d; }
+
+  /* ---------- achievement jadi terasa bisa diklik ---------- */
+  .achieve-card{ cursor:pointer; }
+  .achieve-card.celebrated{ animation:badgePop 0.4s ease; }
+
+  /* ---------- badge & sorot jadwal hari ini ---------- */
+  .jadwal-card.today{
+    border:2px solid var(--sky); box-shadow:0 0 0 5px rgba(47,111,237,0.12);
+    animation:pulseGlow 2.2s ease-in-out infinite;
+  }
+  .today-badge{
+    display:inline-block; margin-left:8px; background:var(--sky); color:#fff; font-family:var(--font-mono);
+    font-size:0.58rem; padding:2px 9px; border-radius:20px; text-transform:uppercase; letter-spacing:0.05em;
+    vertical-align:middle; animation:badgePop 0.5s ease;
+  }
+
+  /* ---------- goyang halus untuk validasi form gagal ---------- */
+  @keyframes shakeX{ 10%,90%{transform:translateX(-1px);} 20%,80%{transform:translateX(2px);} 30%,50%,70%{transform:translateX(-4px);} 40%,60%{transform:translateX(4px);} }
+  .shake-error{ animation:shakeX 0.5s ease; }
+
+  /* ---------- ripple klik tombol ---------- */
+  /* catatan: admin-fab & sound-fab sudah punya position:fixed (jangan ditimpa jadi relative) */
+  .btn-primary, .btn-small, .panel-tab{ position:relative; overflow:hidden; }
+  .admin-fab, .sound-fab{ overflow:hidden; }
+  .ripple-el{
+    position:absolute; border-radius:50%; background:rgba(255,255,255,0.55); transform:scale(0);
+    animation:rippleAnim 550ms ease-out forwards; pointer-events:none;
+  }
+  @keyframes rippleAnim{ to{ transform:scale(2.6); opacity:0; } }
+
+  @media (max-width:680px){
+    .sound-fab{ width:38px; height:38px; font-size:0.92rem; bottom:16px; left:16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+<div class="bg-shape s1" aria-hidden="true"></div>
+<div class="bg-shape s2" aria-hidden="true"></div>
+<div class="bg-shape s3" aria-hidden="true"></div>
+<div class="bg-shape s4" aria-hidden="true"></div>
+
+<!-- ===================== INTRO ANIMASI ===================== -->
+<div id="intro">
+  <div class="chalk-wrap">
+    <div class="chalk-line">Kelas RPL-2</div>
+    <div class="chalk-sub">selamat datang</div>
+  </div>
+  <div class="chalk-dust" id="chalkDust"></div>
+</div>
+
+<!-- ===================== NAV ===================== -->
+<nav>
+  <div class="nav-inner">
+    <a href="#beranda" class="nav-brand"><span class="brand-dot"></span>Kelas RPL-2</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Buka menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="nav-links" id="navLinks">
+      <a href="#beranda" class="nav-link"><span class="nav-icon">🏠</span>Beranda</a>
+      <a href="#struktur" class="nav-link"><span class="nav-icon">🧑‍🏫</span>Struktur</a>
+      <a href="#anggota" class="nav-link"><span class="nav-icon">👥</span>Anggota</a>
+      <a href="#achievement" class="nav-link"><span class="nav-icon">🏆</span>Achievement</a>
+      <a href="#mapel" class="nav-link"><span class="nav-icon">📅</span>Mapel &amp; Piket</a>
+      <a href="#galeri" class="nav-link"><span class="nav-icon">🖼️</span>Galeri</a>
+      <a href="#komentar" class="nav-link"><span class="nav-icon">💬</span>Komentar</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ===================== BERANDA / KATA PENGANTAR ===================== -->
+<section id="beranda">
+  <div class="logo-wrap">
+    <svg class="logo" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="60" cy="60" r="56" fill="var(--navy)"/>
+      <circle cx="60" cy="60" r="56" fill="none" stroke="var(--mustard)" stroke-width="3" stroke-dasharray="6 5"/>
+      <text x="60" y="70" text-anchor="middle" font-family="Kalam, cursive" font-size="34" font-weight="700" fill="#fff">XI</text>
+      <text x="60" y="92" text-anchor="middle" font-family="'Space Mono', monospace" font-size="11" letter-spacing="2" fill="var(--mustard)">F5</text>
+    </svg>
+  </div>
+  <div class="eyebrow">Website Resmi Kelas</div>
+  <h1 class="hero-title">Selamat Datang di <span>Kelas RPL-2</span></h1>
+  <div class="hero-text">
+    <div class="pin"></div>
+    Kelas ini bukan cuma ruang belajar, tapi rumah kedua buat 36 anak dengan cerita
+    dan warna masing-masing. Di sini kita belajar bareng, jatuh-bangun bareng, dan
+    (semoga) lulus bareng juga. Yuk kenalan sama pengurus dan seluruh anggota kelas,
+    lalu mampir ke galeri buat lihat momen-momen kita selama setahun ini.
+  </div>
+</section>
+
+<!-- ===================== STRUKTUR KELAS ===================== -->
+<section id="struktur">
+  <span class="eyebrow">Struktur Kelas</span>
+  <h2>Wali Kelas &amp; Pengurus</h2>
+  <p class="sub">Klik setiap profil untuk melihat nama dan kata-kata dari mereka.</p>
+
+  <div id="guruCard"></div>
+  <div class="pengurus-grid" id="pengurusGrid"></div>
+</section>
+
+<!-- ===================== ANGGOTA ===================== -->
+<section id="anggota">
+  <span class="eyebrow">Sesuai Nomor Absen</span>
+  <h2>Anggota Kelas</h2>
+  <p class="sub">Seluruh 36 siswa kelas RPL-2, termasuk pengurus, diurutkan sesuai nomor absen. Klik nama untuk melihat kata-katanya.</p>
+  <div class="anggota-grid" id="anggotaGrid"></div>
+</section>
+
+<!-- ===================== ACHIEVEMENT ===================== -->
+<!-- GANTI ISI BAGIAN INI SESUAI PRESTASI ASLI KELAS -->
+<section id="achievement">
+  <span class="eyebrow">Prestasi Kelas</span>
+  <h2>Achievement</h2>
+  <p class="sub">Beberapa pencapaian yang pernah diraih kelas RPL-2, baik secara kelompok maupun individu.</p>
+
+  <div class="achieve-grid">
+    <div class="achieve-card">
+      <span class="achieve-year">2025</span>
+      <div class="achieve-icon">🏆</div>
+      <h4>Juara 1 Kelas Terpanas</h4>
+      <span class="achieve-level">Tingkat Sekolah</span>
+      <p class="achieve-desc">Perwakilan kelas berhasil menjadi juara 1 dalam lomba kelas terpanas antar kelas.</p>
+    </div>
+    <div class="achieve-card">
+      <span class="achieve-year">2025</span>
+      <div class="achieve-icon">⚽</div>
+      <h4>Juara 2 Futsal</h4>
+      <span class="achieve-level">Tingkat Sekolah</span>
+      <p class="achieve-desc">Tim futsal kelas RPL-2 meraih posisi runner-up dalam turnamen futsal antar kelas.</p>
+    </div>
+    <div class="achieve-card">
+      <span class="achieve-year">2025</span>
+      <div class="achieve-icon">🧹</div>
+      <h4>Kelas Terbersih</h4>
+      <span class="achieve-level">Tingkat Sekolah</span>
+      <p class="achieve-desc">Penghargaan kelas dengan kebersihan dan kerapian terbaik selama satu semester.</p>
+    </div>
+    <div class="achieve-card">
+      <span class="achieve-year">2025</span>
+      <div class="achieve-icon">📰</div>
+      <h4>Juara 3 Mading 17 Agustus</h4>
+      <span class="achieve-level">Tingkat Sekolah</span>
+      <p class="achieve-desc">Mading kreasi kelas berhasil meraih juara 3 dalam lomba HUT Kemerdekaan RI.</p>
+    </div>
+    <div class="achieve-card">
+      <span class="achieve-year">2025</span>
+      <div class="achieve-icon">🗣️</div>
+      <h4>Peserta Terbaik Debat B. Inggris</h4>
+      <span class="achieve-level">Tingkat Kota</span>
+      <p class="achieve-desc">Perwakilan siswa kelas terpilih sebagai peserta terbaik dalam lomba debat bahasa Inggris.</p>
+    </div>
+    <div class="achieve-card">
+      <span class="achieve-year">2025</span>
+      <div class="achieve-icon">🎨</div>
+      <h4>Juara 1 Lomba Poster Digital</h4>
+      <span class="achieve-level">Tingkat Sekolah</span>
+      <p class="achieve-desc">Karya desain digital siswa kelas terpilih sebagai yang terbaik dalam lomba poster.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== MAPEL & PIKET (SENIN-KAMIS) ===================== -->
+<!-- GANTI ISI JADWAL MAPEL & NAMA PIKET SESUAI JADWAL ASLI KELAS -->
+<section id="mapel">
+  <span class="eyebrow">Jadwal Harian</span>
+  <h2>Mapel &amp; Piket</h2>
+  <p class="sub">Jadwal mata pelajaran dan jadwal piket kebersihan kelas dari hari Senin sampai Kamis.</p>
+
+  <div class="jadwal-grid">
+    <div class="jadwal-card">
+      <span class="hari-tag">Hari ke-1</span>
+      <h4>Senin</h4>
+      <ul class="mapel-list">
+        <li><span class="jam">07.00–08.30</span><span class="nama-mapel">Matematika</span></li>
+        <li><span class="jam">08.30–10.00</span><span class="nama-mapel">Bahasa Indonesia</span></li>
+        <li><span class="jam">10.15–11.45</span><span class="nama-mapel">Fisika</span></li>
+        <li><span class="jam">12.30–14.00</span><span class="nama-mapel">PJOK</span></li>
+      </ul>
+      <div class="piket-box">
+        <div class="piket-label">Piket Kebersihan</div>
+        <div class="piket-names">Andrea, Baraka, Fadilah, Alfaridzi, Zaidan, Matthew, Kaffa.</div>
+      </div>
+    </div>
+
+    <div class="jadwal-card">
+      <span class="hari-tag">Hari ke-2</span>
+      <h4>Selasa</h4>
+      <ul class="mapel-list">
+        <li><span class="jam">07.00–08.30</span><span class="nama-mapel">Kimia</span></li>
+        <li><span class="jam">08.30–10.00</span><span class="nama-mapel">Bahasa Inggris</span></li>
+        <li><span class="jam">10.15–11.45</span><span class="nama-mapel">Sejarah</span></li>
+        <li><span class="jam">12.30–14.00</span><span class="nama-mapel">Seni Budaya</span></li>
+      </ul>
+      <div class="piket-box">
+        <div class="piket-label">Piket Kebersihan</div>
+        <div class="piket-names">Nadhira, Dafi, Alana, Ilham, Michika, Nova.</div>
+      </div>
+    </div>
+
+    <div class="jadwal-card">
+      <span class="hari-tag">Hari ke-3</span>
+      <h4>Rabu</h4>
+      <ul class="mapel-list">
+        <li><span class="jam">07.00–08.30</span><span class="nama-mapel">Biologi</span></li>
+        <li><span class="jam">08.30–10.00</span><span class="nama-mapel">PKN</span></li>
+        <li><span class="jam">10.15–11.45</span><span class="nama-mapel">Matematika</span></li>
+        <li><span class="jam">12.30–14.00</span><span class="nama-mapel">Bahasa Indonesia</span></li>
+      </ul>
+      <div class="piket-box">
+        <div class="piket-label">Piket Kebersihan</div>
+        <div class="piket-names">Delon, Rangga, Khalifah, Yasmin, Greyvian, Alya, Syakiransyah.</div>
+      </div>
+    </div>
+
+    <div class="jadwal-card">
+      <span class="hari-tag">Hari ke-4</span>
+      <h4>Kamis</h4>
+      <ul class="mapel-list">
+        <li><span class="jam">07.00–08.30</span><span class="nama-mapel">Ekonomi</span></li>
+        <li><span class="jam">08.30–10.00</span><span class="nama-mapel">Bahasa Inggris</span></li>
+        <li><span class="jam">10.15–11.45</span><span class="nama-mapel">Pendidikan Agama</span></li>
+        <li><span class="jam">12.30–14.00</span><span class="nama-mapel">Informatika</span></li>
+      </ul>
+      <div class="piket-box">
+        <div class="piket-label">Piket Kebersihan</div>
+        <div class="piket-names">Lova, Dzaky Ridho, Risky, , Selin, Darma, Dafa, Ade Rosyadi.</div>
+      </div>
+    </div>
+  </div>
+
+   <div class="jadwal-card">
+      <span class="hari-tag">Hari ke-4</span>
+      <h4>Jumat</h4>
+      <ul class="mapel-list">
+        <li><span class="jam">07.00–08.30</span><span class="nama-mapel">Ekonomi</span></li>
+        <li><span class="jam">08.30–10.00</span><span class="nama-mapel">Bahasa Inggris</span></li>
+        <li><span class="jam">10.15–11.45</span><span class="nama-mapel">Pendidikan Agama</span></li>
+        <li><span class="jam">12.30–14.00</span><span class="nama-mapel">Informatika</span></li>
+      </ul>
+      <div class="piket-box">
+        <div class="piket-label">Piket Kebersihan</div>
+        <div class="piket-names">Adi, Zikri, , Fida, Damean, Bara Ali, Hadafi, Ikhsan, Kela.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== GALERI ===================== -->
+<section id="galeri">
+  <span class="eyebrow">Album Kelas</span>
+  <h2>Galeri</h2>
+  <p class="sub">Kumpulan momen kelas. Klik foto untuk memperbesar.</p>
+  <div class="galeri-grid" id="galeriGrid"></div>
+</section>
+
+<!-- ===================== KOMENTAR & RATING ===================== -->
+<section id="komentar">
+  <span class="eyebrow">Kesan &amp; Pesan</span>
+  <h2>Komentar &amp; Rating</h2>
+  <p class="sub">Tinggalkan kesan, pesan, atau rating kamu buat kelas X-10. Komentar akan langsung tampil untuk semua pengunjung.</p>
+
+  <div class="rating-summary" id="ratingSummary"></div>
+
+  <div class="comment-form">
+    <input type="text" id="commentName" placeholder="Nama kamu" maxlength="40">
+    <div class="star-picker" id="starPicker">
+      <span data-star="1">★</span><span data-star="2">★</span><span data-star="3">★</span><span data-star="4">★</span><span data-star="5">★</span>
+    </div>
+    <textarea id="commentText" placeholder="Tulis komentar kamu..." maxlength="300" rows="3"></textarea>
+    <button class="btn-primary" id="submitCommentBtn" style="width:auto; padding:10px 24px;">Kirim</button>
+    <div class="admin-error" id="commentError"></div>
+  </div>
+
+  <div class="comment-list" id="commentList"></div>
+</section>
+
+<footer>Dibuat dengan bangga oleh Kelas RPL-2 · Ganti isi data di bagian atas file untuk menyesuaikan</footer>
+
+<!-- ===================== MODAL PROFIL ===================== -->
+<div class="modal-overlay" id="profileModal">
+  <div class="note">
+    <button class="close-btn" id="closeProfile" aria-label="Tutup">✕</button>
+    <div class="avatar" id="modalAvatar"></div>
+    <h3 id="modalName"></h3>
+    <div class="role" id="modalRole"></div>
+    <div class="quote" id="modalQuote"></div>
+    <div class="modal-music" id="modalMusic"></div>
+  </div>
+</div>
+
+<!-- ===================== LIGHTBOX GALERI ===================== -->
+<div class="lightbox" id="lightbox">
+  <figure>
+    <img id="lightboxImg" src="" alt="">
+    <figcaption id="lightboxCaption"></figcaption>
+  </figure>
+</div>
+
+<!-- ===================== ADMIN: TOMBOL & MODAL LOGIN ===================== -->
+<button class="admin-fab" id="adminFab">🔒 Admin</button>
+<button class="sound-fab" id="soundFab" aria-label="Aktif/matikan suara efek" title="Suara efek: aktif">🔊</button>
+<div class="mini-toast" id="miniToast"></div>
+
+<div class="modal-overlay admin-modal" id="loginModal">
+  <div class="note">
+    <button class="close-btn" id="closeLogin" aria-label="Tutup">✕</button>
+    <h3 style="text-align:center; margin-bottom:18px;">Login Admin</h3>
+    <label>Username</label>
+    <input type="text" id="loginUser" autocomplete="off">
+    <label>Password</label>
+    <input type="password" id="loginPass">
+    <div class="admin-error" id="loginError">Username atau password salah.</div>
+    <button class="btn-primary" id="loginSubmit">Masuk</button>
+  </div>
+</div>
+
+<!-- ===================== ADMIN: PANEL UPLOAD FOTO ===================== -->
+<div class="panel-overlay" id="adminPanel">
+  <div class="panel-box">
+    <button class="panel-close" id="closePanel" aria-label="Tutup">✕</button>
+    <h3>Panel Admin</h3>
+    <p class="sub" style="margin-bottom:0;">Upload &amp; kelola foto untuk website kelas. <button class="admin-logout" id="logoutBtn">Keluar</button></p>
+    <div style="background:var(--paper-2); border:1px solid var(--line); border-radius:6px; padding:12px 14px; margin-top:14px;">
+      <p style="font-size:0.78rem; color:var(--ink-soft); line-height:1.55; margin-bottom:8px;">
+        Semua perubahan (foto, nama, jabatan, galeri) di atas hanya tersimpan sementara di penyimpanan artifact.
+        Klik tombol ini untuk mengunduh ulang file HTML dengan seluruh data terbaru sudah tertanam langsung
+        di kode sumber — jadi tetap tersimpan permanen walau website di-hosting di tempat lain tanpa database.
+      </p>
+      <button class="btn-small" id="exportSourceBtn" style="padding:8px 16px;">💾 Export ke File HTML</button>
+      <span class="admin-status" id="exportStatus" style="margin-top:8px;">File berhasil diunduh ✓</span>
+    </div>
+    <div class="panel-tabs">
+      <button class="panel-tab active" data-tab="guru">Wali Kelas</button>
+      <button class="panel-tab" data-tab="siswa">Foto Siswa</button>
+      <button class="panel-tab" data-tab="galeri">Galeri</button>
+      <button class="panel-tab" data-tab="ip">Deteksi &amp; Blokir IP</button>
+      <button class="panel-tab" data-tab="komentar">Komentar</button>
+    </div>
+
+    <div class="panel-section active" id="tabGuru">
+      <div class="admin-row" id="guruAdminRow"></div>
+      <div class="admin-status" id="guruStatus">Foto tersimpan ✓</div>
+    </div>
+
+    <div class="panel-section" id="tabSiswa">
+      <p class="upload-hint">Isi kolom "Link lagu Spotify" dengan link share dari Spotify (track/album/playlist), lalu klik Simpan. Kosongkan untuk menghapus lagu favorit.</p>
+      <input type="text" class="search-box" id="siswaSearch" placeholder="Cari nama siswa...">
+      <div id="siswaAdminList"></div>
+    </div>
+
+    <div class="panel-section" id="tabGaleri">
+      <p class="upload-hint">Upload foto baru ke galeri kelas, atau ganti foto yang sudah ada.</p>
+      <div class="gal-admin-grid" id="galAdminGrid"></div>
+      <h4 style="font-family:var(--font-hand); color:var(--navy); margin:24px 0 10px;">+ Tambah Foto Baru</h4>
+      <input type="text" class="search-box" id="newGalCaption" placeholder="Keterangan foto...">
+      <input type="file" accept="image/*" id="newGalFile">
+      <button class="btn-small" id="addGalBtn" style="margin-top:10px; padding:8px 16px;">Tambah ke Galeri</button>
+    </div>
+
+    <div class="panel-section" id="tabIp">
+      <p class="upload-hint">
+        IP pengunjung dideteksi otomatis lewat layanan pihak ketiga saat mereka membuka website ini.
+        Ini penghalang sederhana, bukan proteksi jaringan yang sesungguhnya — pengunjung yang pakai VPN
+        atau mengganti IP tetap bisa mengakses lagi.
+      </p>
+
+      <div class="admin-row" style="border:none; padding-top:0;">
+        <div class="info">
+          <h5>Blokir Otomatis Pengguna VPN/Proxy</h5>
+          <span>Deteksi via proxycheck.io — gratis, tidak selalu akurat, bisa salah blokir</span>
+        </div>
+        <label style="display:flex; align-items:center; gap:6px; font-family:var(--font-mono); font-size:0.7rem; white-space:nowrap;">
+          <input type="checkbox" id="blockVpnToggle"> Aktif
+        </label>
+      </div>
+
+      <div style="display:flex; gap:8px; margin-bottom:18px;">
+        <input type="text" class="search-box" id="banIpInput" placeholder="Tulis IP yang mau diblokir, mis. 103.10.20.30" style="margin-bottom:0;">
+        <button class="btn-small danger" id="banIpBtn" style="white-space:nowrap; padding:0 16px;">Ban IP</button>
+      </div>
+
+      <h4 style="font-family:var(--font-hand); color:var(--navy); margin-bottom:8px;">IP yang Diblokir</h4>
+      <div id="bannedIpList"></div>
+
+      <h4 style="font-family:var(--font-hand); color:var(--navy); margin:22px 0 8px;">Riwayat Pengunjung (terbaru)</h4>
+      <div id="visitorLogList"></div>
+    </div>
+
+    <div class="panel-section" id="tabKomentar">
+      <p class="upload-hint">Kelola komentar & rating dari pengunjung. Hapus yang tidak pantas atau spam.</p>
+      <div id="commentAdminList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== LAYAR BLOKIR (untuk IP yang di-ban) ===================== -->
+<div id="blockedScreen" style="display:none; position:fixed; inset:0; z-index:9999; background:var(--navy); color:#fff; align-items:center; justify-content:center; text-align:center; padding:24px; font-family:var(--font-body);">
+  <div>
+    <div id="blockedTitle" style="font-family:var(--font-hand); font-size:2.4rem; margin-bottom:12px;">Akses Ditolak</div>
+    <p id="blockedMessage" style="color:var(--mustard); font-family:var(--font-mono); font-size:0.85rem;">IP Anda telah diblokir oleh admin website ini.</p>
+  </div>
+</div>
+
+<script id="mainScript">
+/* =========================================================================
+   DATA KELAS — EDIT BAGIAN INI SESUAI DATA ASLI KELAS KAMU
+   - photo: isi dengan URL foto (mis. "foto/andi.jpg") atau biarkan null untuk
+     memakai avatar inisial otomatis.
+   ========================================================================= */
+
+const COLORS = ['#123A66','#2F6FED','#1B4F8C','#0A2544','#3E6990','#5B8DBE'];
+function colorFor(seed){
+  let h=0; for(const c of seed) h = (h*31 + c.charCodeAt(0)) % 997;
+  return COLORS[h % COLORS.length];
+}
+function initials(name){
+  return name.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();
+}
+
+/* Mencegah XSS: selalu escape teks dinamis sebelum dimasukkan lewat innerHTML.
+   Elemen yang dibuat lewat createElement + textContent sudah aman secara default. */
+function escapeHtml(str){
+  return String(str ?? '').replace(/[&<>"']/g, ch => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+  }[ch]));
+}
+
+const GURU = {
+  name: 'Ibu Eva Yepriliyanti, S.Kom',
+  role: 'Wali Kelas',
+  quote: '"Kalian bukan cuma murid saya, kalian adalah anak-anak yang saya banggakan setiap hari."',
+  photo: null
+};
+
+const PENGURUS = [
+  { name:'Benedictus Matthew Temaluru',    role:'Ketua Kelas',        quote:'"Lopyu Fida :3"', photo:null },
+  { name:'Damean Maranata Siringo Ringo',    role:'Wakil Ketua Kelas',  quote:'"Lebih Baik Tersakiti Dari Pada Menyakiti."', photo:null },
+  { name:'Mufida Choirunisa',  role:'Sekretaris',         quote:'"Catatan rapi, kelas jadi asri."', photo:null },
+  { name:'Keyla Nafisha Putri', role:'Bendahara',        quote:'"Uang kas jangan telat, hidup jangan boros."', photo:null },
+  { name:'Rangga Shandy Pratama', role:'Satgas',             quote:'"Hidup Berat Di Bawa Santai Aja."', photo:null },
+  { name:'Fadilah',  role:'Satgas',             quote:'"Disiplin itu bukan beban, tapi kebiasaan."', photo:null },
+];
+
+// Seluruh 36 siswa kelas, diurutkan sesuai nomor absen (termasuk 6 pengurus).
+// role: isi 'Anggota Kelas' untuk siswa biasa, atau nama jabatan untuk pengurus.
+const ANGGOTA = [
+  { name:'Ade Rosyadie Al Ghozali',        role:'Anggota Kelas' },
+  { name:'Alana Nathania Maruao',        role:'Anggota Kelas' },
+  { name:'Andrea Radithya Ersyon',      role:'Anggota Kelas' },
+  { name:'Arfarizi Baiza Rahman',        role:'Anggota Kelas' },
+  { name:'Bara Ali Firdaus',     role:'Satgas' },
+  { name:'Baraka Dwi Ghaniyyu',       role:'Anggota Kelas' },
+  { name:'Benedictus Matthew Temaluru',     role:'Ketua Kelas' },
+  { name:'Dafa Ganeti',      role:'Anggota Kelas' },
+  { name:'Dafi Azhar',       role:'Anggota Kelas' },
+  { name:'Damean Maranata Siringo Ringo',      role:'Wakil Ketua kelas' },
+  { name:'Darma Agustino Sinaga',       role:'Anggota Kelas' },
+  { name:'Dzaky Ridho Ramadhan',     role:'Anggota Kelas' },
+  { name:'Fadilah',       role:'Anggota Kelas' },
+  { name:'Greyvian Wijaya',        role:'Anggota Kelas' },
+  { name:'Kaffa Febrian Suwardana',     role:'Anggota Kelas' },
+  { name:'Keyla Nafisha Putri',   role:'Bendahara' },
+  { name:'Khalifa Muhammad Ramin',      role:'Anggota Kelas' },
+  { name:'Lova Aliyah El Zisdi',     role:'Anggota Kelas' },
+  { name:'Marsel Delon Saputra Ziliwu',         role:'Anggota Kelas' },
+  { name:'Michika Kanaya Bulan',         role:'Anggota Kelas' },
+  { name:'Mohammad Syakiransyah',        role:'Anggota Kelas' },
+  { name:'Mufida Choirunisa',   role:'Sekretaris' },
+  { name:'Muhammad Zikri Ramadhan',      role:'Anggota Kelas' },
+  { name:'Muhammd Fadilah Rizky Ramadhan',       role:'Anggota Kelas' },
+  { name:'Muhammad Hadyi Afdhala',        role:'Anggota Kelas' },
+  { name:'Muhammad Ihsan Fauzi',     role:'Anggota Kelas' },
+  { name:'Muhammad Ilham Alhaki',      role:'Sekretaris' },
+  { name:'Muhammad Nurkhadafy Fadlan Hidaya',   role:'Anggota Kelas' },
+  { name:'Neta Selina Putri',      role:'Anggota Kelas' },
+  { name:'Novariyanti Virathalya',      role:'Anggota Kelas' },
+  { name:'Nur Alya Oktaviani',          role:'Anggota Kelas' },
+  { name:'Nur Nadhira',       role:'Anggota Kelas' },
+  { name:'Okta Parera',        role:'Anggota Kelas' },
+  { name:'Rangga Shandy Pratama',      role:'Satgas' },
+  { name:'Yamis Atira Destiani',       role:'Anggota Kelas' },
+  { name:'Zaidan Irsyad Firmansyah',         role:'Anggota Kelas' },
+].map((p,i)=>({
+  ...p,
+  id: slugName(p.name),
+  num: String(i+1).padStart(2,'0'),
+  quote: p.role==='Anggota Kelas'
+    ? `"Semangat terus buat kelas X-2 nomor absen ${i+1}!"`
+    : `"Sebagai ${p.role}, siap kasih yang terbaik buat kelas ini."`,
+  photo:null,
+  music:null // link lagu favorit Spotify, diisi lewat panel Admin > tab Siswa
+}));
+PENGURUS.forEach(p => { p.id = slugName(p.name); });
+
+// Galeri — ganti url dengan foto kelas aslimu
+const GALERI = [
+  { url:'https://picsum.photos/seed/kelasf5-1/500/500', caption:'Study tour bareng' },
+  { url:'https://picsum.photos/seed/kelasf5-2/500/500', caption:'Class meeting' },
+  { url:'https://picsum.photos/seed/kelasf5-3/500/500', caption:'Perpisahan angkatan' },
+  { url:'https://picsum.photos/seed/kelasf5-4/500/500', caption:'Lomba 17-an' },
+  { url:'https://picsum.photos/seed/kelasf5-5/500/500', caption:'Ulang tahun kelas' },
+  { url:'https://picsum.photos/seed/kelasf5-6/500/500', caption:'Praktikum lab' },
+  { url:'https://picsum.photos/seed/kelasf5-7/500/500', caption:'Foto angkatan' },
+  { url:'https://picsum.photos/seed/kelasf5-8/500/500', caption:'Ekstrakurikuler' },
+];
+
+/* ============================= FOTO: PENYIMPANAN ============================= */
+// Foto yang diupload admin disimpan lewat window.storage (persisten, shared ke semua
+// pengunjung website ini). Ini hanya berfungsi selama file dibuka sebagai artifact
+// Claude — kalau file di-hosting di tempat lain, upload foto tidak akan tersimpan.
+
+/* ============================= MUSIK FAVORIT (SPOTIFY) ============================= */
+// Menerima link Spotify biasa (track/album/playlist/episode/show), termasuk yang
+// berawalan /intl-xx/ atau ada query ?si=..., lalu mengubahnya jadi URL embed player.
+// Mengembalikan null kalau link bukan link Spotify yang valid.
+function spotifyEmbedUrl(url){
+  if(!url) return null;
+  try{
+    const u = new URL(url.trim());
+    if(!/(^|\.)open\.spotify\.com$/.test(u.hostname)) return null;
+    const parts = u.pathname.split('/').filter(Boolean);
+    if(parts[0] && parts[0].startsWith('intl-')) parts.shift();
+    const type = parts[0];
+    const id = parts[1];
+    const validTypes = ['track','album','playlist','episode','show'];
+    if(!type || !id || !validTypes.includes(type)) return null;
+    return `https://open.spotify.com/embed/${type}/${id}?utm_source=generator&theme=0`;
+  }catch(e){ return null; }
+}
+
+function slugName(name){
+  return name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+}
+
+async function getPhoto(key){
+  try{ const r = await window.storage.get(key, true); return r ? r.value : null; }
+  catch(e){ return null; }
+}
+async function setPhoto(key, value){
+  try{ return await window.storage.set(key, value, true); }
+  catch(e){ console.error('Gagal menyimpan foto:', e); return null; }
+}
+
+function compressImage(file, maxSize=480, quality=0.82){
+  return new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onload = ()=>{
+      const img = new Image();
+      img.onload = ()=>{
+        let w = img.width, h = img.height;
+        if(w >= h && w > maxSize){ h = Math.round(h*maxSize/w); w = maxSize; }
+        else if(h > w && h > maxSize){ w = Math.round(w*maxSize/h); h = maxSize; }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = reject;
+      img.src = reader.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+async function loadAllPhotos(){
+  const guruPhoto = await getPhoto('photo:guru');
+  if(guruPhoto) GURU.photo = guruPhoto;
+  const guruName = await getPhoto('name:guru');
+  if(guruName) GURU.name = guruName;
+  const guruRole = await getPhoto('role:guru');
+  if(guruRole) GURU.role = guruRole;
+
+  const uniqueIds = new Set();
+  PENGURUS.forEach(p=>uniqueIds.add(p.id));
+  ANGGOTA.forEach(p=>uniqueIds.add(p.id));
+  const photoMap = {}, nameMap = {}, roleMap = {}, musicMap = {};
+  for(const id of uniqueIds){
+    const photoVal = await getPhoto('photo:siswa:'+id);
+    if(photoVal) photoMap[id] = photoVal;
+    const nameVal = await getPhoto('name:siswa:'+id);
+    if(nameVal) nameMap[id] = nameVal;
+    const roleVal = await getPhoto('role:siswa:'+id);
+    if(roleVal) roleMap[id] = roleVal;
+    const musicVal = await getPhoto('music:siswa:'+id);
+    if(musicVal) musicMap[id] = musicVal;
+  }
+  [PENGURUS, ANGGOTA].forEach(arr=>{
+    arr.forEach(p=>{
+      if(photoMap[p.id]) p.photo = photoMap[p.id];
+      if(nameMap[p.id]) p.name = nameMap[p.id];
+      if(roleMap[p.id]) p.role = roleMap[p.id];
+      if(musicMap[p.id]) p.music = musicMap[p.id];
+    });
+  });
+
+  // Foto galeri bawaan yang sudah diganti admin
+  for(let i=0;i<GALERI.length;i++){
+    const override = await getPhoto('galeri:base:'+i);
+    if(override){ const data = JSON.parse(override); GALERI[i] = { ...GALERI[i], ...data }; }
+  }
+  // Foto galeri tambahan yang ditambahkan admin
+  try{
+    const list = await window.storage.list('galeri:custom:', true);
+    if(list && list.keys){
+      for(const k of list.keys){
+        const r = await window.storage.get(k, true);
+        if(r){ const data = JSON.parse(r.value); GALERI.push({ ...data, _key:k }); }
+      }
+    }
+  }catch(e){}
+}
+
+/* ============================= RENDER ============================= */
+
+function avatarNode(person){
+  const div = document.createElement('div');
+  div.className='avatar';
+  if(person.photo){
+    const img=document.createElement('img');
+    img.src=person.photo; img.alt=person.name;
+    img.style.width='100%'; img.style.height='100%'; img.style.borderRadius='50%'; img.style.objectFit='cover';
+    div.appendChild(img);
+  } else {
+    div.style.background = colorFor(person.name);
+    div.textContent = initials(person.name);
+  }
+  return div;
+}
+
+function renderGuru(){
+  const guruWrap = document.getElementById('guruCard');
+  guruWrap.innerHTML = '';
+  const guruCard = document.createElement('div');
+  guruCard.className='teacher-card';
+  guruCard.tabIndex=0;
+  guruCard.appendChild(avatarNode(GURU));
+  const guruInfo = document.createElement('div');
+  guruInfo.innerHTML = `<h3>${escapeHtml(GURU.name)}</h3><p>${escapeHtml(GURU.role)}</p>`;
+  guruCard.appendChild(guruInfo);
+  guruCard.addEventListener('click', ()=>openProfile(GURU));
+  guruCard.addEventListener('keydown', e=>{ if(e.key==='Enter') openProfile(GURU); });
+  guruWrap.appendChild(guruCard);
+}
+
+function renderPengurus(){
+  const pengurusGrid = document.getElementById('pengurusGrid');
+  pengurusGrid.innerHTML = '';
+  PENGURUS.forEach(p=>{
+    const card=document.createElement('div');
+    card.className='id-card'; card.tabIndex=0;
+    card.appendChild(avatarNode(p));
+    const h4=document.createElement('h4'); h4.textContent=p.name;
+    const role=document.createElement('div'); role.className='role'; role.textContent=p.role;
+    card.appendChild(h4); card.appendChild(role);
+    card.addEventListener('click', ()=>openProfile(p));
+    card.addEventListener('keydown', e=>{ if(e.key==='Enter') openProfile(p); });
+    pengurusGrid.appendChild(card);
+  });
+}
+
+function renderAnggota(){
+  const anggotaGrid = document.getElementById('anggotaGrid');
+  anggotaGrid.innerHTML = '';
+  ANGGOTA.forEach(p=>{
+    const mini=document.createElement('div');
+    mini.className='mini'; mini.tabIndex=0;
+    mini.appendChild(avatarNode(p));
+    const num=document.createElement('div'); num.className='num'; num.textContent='#'+p.num;
+    const name=document.createElement('div'); name.className='name'; name.textContent=p.name;
+    mini.appendChild(num); mini.appendChild(name);
+    if(p.role !== 'Anggota Kelas'){
+      const tag=document.createElement('div'); tag.className='tag'; tag.textContent=p.role;
+      mini.appendChild(tag);
+    }
+    if(p.music){
+      const badge=document.createElement('div'); badge.className='music-badge'; badge.textContent='🎵';
+      badge.title='Punya lagu favorit — klik untuk dengar';
+      mini.appendChild(badge);
+    }
+    mini.addEventListener('click', ()=>openProfile(p));
+    mini.addEventListener('keydown', e=>{ if(e.key==='Enter') openProfile(p); });
+    anggotaGrid.appendChild(mini);
+  });
+}
+
+function renderGaleri(){
+  const galeriGrid = document.getElementById('galeriGrid');
+  galeriGrid.innerHTML = '';
+  GALERI.forEach(g=>{
+    const fig=document.createElement('figure');
+    fig.className='polaroid'; fig.tabIndex=0;
+    fig.innerHTML = `<div class="tape"></div><img src="${escapeHtml(g.url)}" alt="${escapeHtml(g.caption)}"><figcaption>${escapeHtml(g.caption)}</figcaption>`;
+    fig.addEventListener('click', ()=>openLightbox(g));
+    fig.addEventListener('keydown', e=>{ if(e.key==='Enter') openLightbox(g); });
+    galeriGrid.appendChild(fig);
+  });
+}
+
+/* ============================= MODAL PROFIL ============================= */
+const profileModal = document.getElementById('profileModal');
+const modalAvatar = document.getElementById('modalAvatar');
+const modalName = document.getElementById('modalName');
+const modalRole = document.getElementById('modalRole');
+const modalQuote = document.getElementById('modalQuote');
+
+function openProfile(p){
+  modalAvatar.innerHTML='';
+  modalAvatar.className='avatar';
+  if(p.photo){
+    const img=document.createElement('img');
+    img.src=p.photo; img.style.width='100%'; img.style.height='100%'; img.style.borderRadius='50%'; img.style.objectFit='cover';
+    modalAvatar.appendChild(img);
+  } else {
+    modalAvatar.style.background = colorFor(p.name);
+    modalAvatar.textContent = initials(p.name);
+  }
+  modalName.textContent = p.name;
+  modalRole.textContent = p.role;
+  modalQuote.textContent = p.quote;
+
+  const modalMusic = document.getElementById('modalMusic');
+  modalMusic.innerHTML = '';
+  const embedUrl = spotifyEmbedUrl(p.music);
+  if(embedUrl){
+    const label = document.createElement('div');
+    label.className = 'music-label';
+    label.textContent = '🎵 Lagu Favorit';
+    const iframe = document.createElement('iframe');
+    iframe.src = embedUrl;
+    iframe.width = '100%';
+    iframe.height = '152';
+    iframe.frameBorder = '0';
+    iframe.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
+    iframe.loading = 'lazy';
+    iframe.style.borderRadius = '12px';
+    modalMusic.appendChild(label);
+    modalMusic.appendChild(iframe);
+  }
+  profileModal.classList.add('open');
+}
+document.getElementById('closeProfile').addEventListener('click', ()=>profileModal.classList.remove('open'));
+profileModal.addEventListener('click', e=>{ if(e.target===profileModal) profileModal.classList.remove('open'); });
+
+/* ============================= LIGHTBOX GALERI ============================= */
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightboxImg');
+const lightboxCaption = document.getElementById('lightboxCaption');
+function openLightbox(g){
+  lightboxImg.src=g.url; lightboxImg.alt=g.caption; lightboxCaption.textContent=g.caption;
+  lightbox.classList.add('open');
+}
+lightbox.addEventListener('click', ()=>lightbox.classList.remove('open'));
+
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape'){
+    profileModal.classList.remove('open');
+    lightbox.classList.remove('open');
+    document.getElementById('loginModal').classList.remove('open');
+    document.getElementById('adminPanel').classList.remove('open');
+  }
+});
+
+/* ============================= INTRO ANIMASI ============================= */
+const dustWrap = document.getElementById('chalkDust');
+for(let i=0;i<24;i++){
+  const d=document.createElement('div');
+  d.className='dot';
+  d.style.left = Math.random()*100+'%';
+  d.style.top = Math.random()*100+'%';
+  d.style.animationDelay = (Math.random()*4)+'s';
+  d.style.opacity = Math.random()*0.6;
+  dustWrap.appendChild(d);
+}
+const introEl = document.getElementById('intro');
+introEl.addEventListener('click', ()=>introEl.classList.add('hide'));
+
+/* ============================= DETEKSI IP & BAN (PENGHALANG SISI BROWSER) =================
+   Catatan jujur: IP dideteksi lewat layanan pihak ketiga (api.ipify.org) dari browser
+   pengunjung sendiri. Kalau layanan itu diblokir jaringan/browser mereka, deteksi gagal —
+   dan supaya pengunjung sah tidak ikut terkunci, sistem ini "fail-open": kalau IP tidak
+   terdeteksi, akses tetap diizinkan (hanya saja tidak tercatat). "Ban" di sini menyembunyikan
+   konten di browser tersebut, bukan memblokir di jaringan/server. */
+
+let visitorIP = null;
+
+async function detectIP(){
+  try{
+    const controller = new AbortController();
+    const timeout = setTimeout(()=>controller.abort(), 4000);
+    const res = await fetch('https://api.ipify.org?format=json', { signal: controller.signal });
+    clearTimeout(timeout);
+    const data = await res.json();
+    return data.ip || null;
+  }catch(e){
+    return null; // gagal deteksi -> fail-open, jangan mengunci pengunjung sah
+  }
+}
+
+async function isIPBanned(ip){
+  if(!ip) return false;
+  try{
+    const r = await window.storage.get('banned-ip:'+ip, true);
+    return !!r;
+  }catch(e){ return false; }
+}
+
+async function getBlockVpnSetting(){
+  try{
+    const r = await window.storage.get('settings:block-vpn', true);
+    if(!r) return true; // default: aktif
+    return r.value === 'on';
+  }catch(e){ return true; }
+}
+async function setBlockVpnSetting(on){
+  try{ await window.storage.set('settings:block-vpn', on ? 'on' : 'off', true); }catch(e){}
+}
+
+async function detectVPN(ip){
+  if(!ip) return false;
+  try{
+    const controller = new AbortController();
+    const timeout = setTimeout(()=>controller.abort(), 4000);
+    const res = await fetch(`https://proxycheck.io/v2/${ip}?vpn=1`, { signal: controller.signal });
+    clearTimeout(timeout);
+    const data = await res.json();
+    if(data && data.status === 'ok' && data[ip] && data[ip].proxy === 'yes'){
+      return true;
+    }
+    return false; // status bukan 'ok' (mis. kena limit harian) -> anggap bukan VPN, fail-open
+  }catch(e){
+    return false; // gagal hubungi layanan -> fail-open, jangan mengunci pengunjung sah
+  }
+}
+
+async function logVisit(ip){
+  try{
+    const key = 'visitor-log:'+Date.now()+'-'+Math.random().toString(36).slice(2,7);
+    const data = { ip, time: new Date().toISOString(), ua: navigator.userAgent.slice(0,120) };
+    await window.storage.set(key, JSON.stringify(data), true);
+  }catch(e){}
+}
+
+function showBlockedScreen(title, message){
+  document.getElementById('blockedTitle').textContent = title || 'Akses Ditolak';
+  document.getElementById('blockedMessage').textContent = message || 'Akses Anda diblokir oleh admin website ini.';
+  document.getElementById('blockedScreen').style.display = 'flex';
+  document.getElementById('intro').style.display = 'none';
+  document.body.style.overflow = 'hidden';
+}
+
+async function ipGateAndIntro(){
+  const [ip] = await Promise.all([
+    detectIP(),
+    new Promise(res=>setTimeout(res, 2600)) // durasi minimum animasi intro
+  ]);
+  visitorIP = ip;
+
+  if(ip){
+    const banned = await isIPBanned(ip);
+    if(banned){
+      showBlockedScreen('Akses Ditolak', 'IP Anda telah diblokir oleh admin website ini.');
+      return;
+    }
+
+    const blockVpnAktif = await getBlockVpnSetting();
+    if(blockVpnAktif){
+      const isVpn = await detectVPN(ip);
+      if(isVpn){
+        showBlockedScreen('Akses Ditolak', 'Terdeteksi menggunakan VPN/Proxy. Matikan VPN untuk membuka website ini.');
+        return;
+      }
+    }
+
+    logVisit(ip);
+  }
+  introEl.classList.add('hide');
+}
+ipGateAndIntro();
+
+/* ============================= KEAMANAN DASAR (PENGHALANG, BUKAN PROTEKSI MUTLAK) =============
+   Catatan jujur: ini hanya menghalangi pengunjung biasa. Karena semuanya berjalan di browser,
+   kode ini sendiri tetap bisa dibaca oleh siapapun yang cukup niat (lihat pesan penjelasan
+   dari Claude). Jangan simpan data benar-benar rahasia hanya mengandalkan lapisan ini. */
+
+// Blokir klik-kanan (mencegah "Inspect" lewat context menu)
+document.addEventListener('contextmenu', e => e.preventDefault());
+
+// Blokir shortcut umum untuk membuka DevTools / lihat source
+document.addEventListener('keydown', e => {
+  const k = e.key.toLowerCase();
+  const blokir =
+    k === 'f12' ||
+    (e.ctrlKey && e.shiftKey && ['i','j','c'].includes(k)) || // Inspect / Console / Element picker
+    (e.ctrlKey && k === 'u') ||                                 // View Source
+    (e.metaKey && e.altKey && ['i','j','c'].includes(k));       // shortcut versi Mac
+  if(blokir) e.preventDefault();
+});
+
+// Peringatan halus kalau DevTools tetap dibuka lewat menu browser (bukan shortcut)
+(function devtoolsWarning(){
+  let warned = false;
+  const threshold = 160;
+  setInterval(()=>{
+    const bukaLebar = window.outerWidth - window.innerWidth > threshold;
+    const bukaTinggi = window.outerHeight - window.innerHeight > threshold;
+    if((bukaLebar || bukaTinggi) && !warned){
+      warned = true;
+      console.log('%cStop!', 'color:red; font-size:40px; font-weight:bold;');
+      console.log('%cIni website kelas privat. Mohon jangan disalahgunakan ya 🙏', 'font-size:14px;');
+    }
+    if(!bukaLebar && !bukaTinggi) warned = false;
+  }, 1000);
+})();
+
+/* ============================= ADMIN: LOGIN & PANEL ============================= */
+// Password TIDAK disimpan sebagai teks biasa — hanya hash SHA-256 (+ salt) yang tersimpan di kode.
+// Siapa pun yang buka "view source" tidak akan langsung melihat password aslinya.
+const ADMIN_LOGIN_SALT = '9cf966e34b0db30a';
+// Daftar akun admin yang diizinkan masuk ke panel. Untuk menambah/mengganti akun,
+// tambahkan/ubah entri di sini (hash dibuat dari SHA-256(ADMIN_LOGIN_SALT + password)).
+const ADMIN_ACCOUNTS = [
+  { username: 'Matthew',   passwordHash: 'c2e76826ac3787cc4f5bd42d8b8676faab321091708995f9d7132e169a7e2bca' },
+  { username: 'Dame',      passwordHash: '1b78ee8e5c99892355b7aefad10f1f7f52d5e645988a773584de19f4a95ace0b' },
+  { username: 'Lemmonner', passwordHash: '97166d3c32c5f13afee13d15e6802870c83b4447f8f8f4d6f24ae4e1e07bdc0d' },
+];
+async function sha256Hex(str){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+const MAX_ATTEMPT = 5;
+const LOCKOUT_MS = 5 * 60 * 1000; // 5 menit
+let isAdmin = false;
+let currentAdminUsername = null;
+
+// Semua aktivitas admin dicatat ke console log browser (F12 > Console) untuk audit sederhana.
+function logAdminActivity(action, detail){
+  const waktu = new Date().toLocaleString('id-ID');
+  console.log(
+    `%c[ADMIN LOG] ${waktu} — ${action}`,
+    'color:#fff; background:#1F3A5F; padding:2px 6px; border-radius:3px; font-weight:bold;',
+    detail !== undefined ? detail : ''
+  );
+}
+
+const adminFab = document.getElementById('adminFab');
+const loginModal = document.getElementById('loginModal');
+const adminPanel = document.getElementById('adminPanel');
+const loginUser = document.getElementById('loginUser');
+const loginPass = document.getElementById('loginPass');
+const loginError = document.getElementById('loginError');
+const loginSubmitBtn = document.getElementById('loginSubmit');
+
+// Status percobaan login: disimpan per-browser (lokal) DAN per-IP (dibagi semua pengunjung),
+// supaya penyerang yang cuma ganti browser/mode incognito tidak otomatis reset lockout-nya.
+async function getLoginState(key, shared){
+  try{
+    const r = await window.storage.get(key, shared);
+    return r ? JSON.parse(r.value) : { attempts:0, lockUntil:0 };
+  }catch(e){ return { attempts:0, lockUntil:0 }; }
+}
+async function setLoginState(key, shared, state){
+  try{ await window.storage.set(key, JSON.stringify(state), shared); }catch(e){}
+}
+const LOCAL_LOGIN_KEY = 'security:login-state';
+function ipLoginKey(ip){ return 'security:login-lock:'+ip; }
+
+function formatSisaWaktu(ms){
+  const totalDetik = Math.ceil(ms/1000);
+  const menit = Math.floor(totalDetik/60);
+  const detik = totalDetik%60;
+  return menit>0 ? `${menit} menit ${detik} detik` : `${detik} detik`;
+}
+
+async function refreshLoginLockUI(){
+  const local = await getLoginState(LOCAL_LOGIN_KEY, false);
+  let sisa = local.lockUntil - Date.now();
+  if(visitorIP){
+    const ipState = await getLoginState(ipLoginKey(visitorIP), true);
+    sisa = Math.max(sisa, ipState.lockUntil - Date.now());
+  }
+  if(sisa > 0){
+    loginSubmitBtn.disabled = true;
+    loginSubmitBtn.style.opacity = '0.5';
+    loginError.style.display = 'block';
+    loginError.textContent = `Terlalu banyak percobaan gagal. Coba lagi dalam ${formatSisaWaktu(sisa)}.`;
+    return true;
+  }
+  loginSubmitBtn.disabled = false;
+  loginSubmitBtn.style.opacity = '1';
+  return false;
+}
+
+adminFab.addEventListener('click', async ()=>{
+  if(isAdmin){ openAdminPanel(); }
+  else {
+    loginError.style.display='none';
+    loginUser.value=''; loginPass.value='';
+    loginModal.classList.add('open');
+    await refreshLoginLockUI();
+    loginUser.focus();
+  }
+});
+document.getElementById('closeLogin').addEventListener('click', ()=>loginModal.classList.remove('open'));
+loginModal.addEventListener('click', e=>{ if(e.target===loginModal) loginModal.classList.remove('open'); });
+
+async function doLogin(){
+  const terkunci = await refreshLoginLockUI();
+  if(terkunci) return;
+
+  const passHash = await sha256Hex(ADMIN_LOGIN_SALT + loginPass.value);
+  const akunCocok = ADMIN_ACCOUNTS.find(a=> a.username===loginUser.value.trim() && a.passwordHash===passHash);
+  if(akunCocok){
+    await setLoginState(LOCAL_LOGIN_KEY, false, { attempts:0, lockUntil:0 }); // reset kalau berhasil
+    if(visitorIP) await setLoginState(ipLoginKey(visitorIP), true, { attempts:0, lockUntil:0 });
+    isAdmin = true;
+    currentAdminUsername = akunCocok.username;
+    loginModal.classList.remove('open');
+    logAdminActivity('Login berhasil', { username: akunCocok.username, ip: visitorIP || 'tidak terdeteksi' });
+    openAdminPanel();
+  } else {
+    const state = await getLoginState(LOCAL_LOGIN_KEY, false);
+    state.attempts += 1;
+    let pesan = `Username atau password salah. Percobaan ${state.attempts}/${MAX_ATTEMPT}.`;
+    logAdminActivity('Percobaan login GAGAL', { usernameDicoba: loginUser.value.trim(), percobaanKe: state.attempts, ip: visitorIP || 'tidak terdeteksi' });
+    if(state.attempts >= MAX_ATTEMPT){
+      state.lockUntil = Date.now() + LOCKOUT_MS;
+      state.attempts = 0;
+      pesan = `Terlalu banyak percobaan gagal. Login dikunci selama 5 menit.`;
+      loginSubmitBtn.disabled = true;
+      loginSubmitBtn.style.opacity = '0.5';
+      logAdminActivity('Login dikunci sementara (terlalu banyak percobaan gagal)', { ip: visitorIP || 'tidak terdeteksi' });
+    }
+    await setLoginState(LOCAL_LOGIN_KEY, false, state);
+
+    if(visitorIP){
+      const ipState = await getLoginState(ipLoginKey(visitorIP), true);
+      ipState.attempts += 1;
+      if(ipState.attempts >= MAX_ATTEMPT){
+        ipState.lockUntil = Date.now() + LOCKOUT_MS;
+        ipState.attempts = 0;
+      }
+      await setLoginState(ipLoginKey(visitorIP), true, ipState);
+    }
+
+    loginError.textContent = pesan;
+    loginError.style.display='block';
+  }
+}
+document.getElementById('loginSubmit').addEventListener('click', doLogin);
+loginPass.addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+
+/* ============================= EXPORT KE SOURCE CODE ============================= */
+// Menulis ulang seluruh data (GURU, PENGURUS, ANGGOTA, GALERI) yang sedang tersimpan
+// di memori langsung ke dalam kode sumber HTML, lalu mengunduhnya sebagai file baru.
+// Dengan cara ini, data tetap permanen walau file di-hosting tanpa database/storage
+// apa pun — cukup timpa file lama dengan hasil unduhan ini.
+function exportSourceHTML(){
+  const scriptEl = document.getElementById('mainScript');
+  let scriptSrc = scriptEl.textContent;
+
+  const guruLiteral = 'const GURU = ' + JSON.stringify(
+    { name: GURU.name, role: GURU.role, quote: GURU.quote, photo: GURU.photo }, null, 2
+  ) + ';';
+
+  const pengurusLiteral = 'const PENGURUS = ' + JSON.stringify(
+    PENGURUS.map(p=>({ name:p.name, role:p.role, quote:p.quote, photo:p.photo, id:p.id })), null, 2
+  ) + ';';
+
+  const anggotaLiteral = 'const ANGGOTA = ' + JSON.stringify(
+    ANGGOTA.map(p=>({ name:p.name, role:p.role, id:p.id, num:p.num, quote:p.quote, photo:p.photo, music:p.music })), null, 2
+  ) + ';';
+
+  const galeriLiteral = 'const GALERI = ' + JSON.stringify(
+    GALERI.map(g=>({ url:g.url, caption:g.caption })), null, 2
+  ) + ';';
+
+  scriptSrc = scriptSrc.replace(/const GURU = \{[\s\S]*?\n\};/, guruLiteral);
+  scriptSrc = scriptSrc.replace(/const PENGURUS = \[[\s\S]*?\n\];/, pengurusLiteral);
+  scriptSrc = scriptSrc.replace(/const ANGGOTA = \[[\s\S]*?\}\)\);/, anggotaLiteral);
+  scriptSrc = scriptSrc.replace(/const GALERI = \[[\s\S]*?\n\];/, galeriLiteral);
+
+  const docClone = document.documentElement.cloneNode(true);
+  docClone.querySelector('#mainScript').textContent = scriptSrc;
+  // Bersihkan status tampilan sementara (modal terbuka dll) supaya file hasil unduhan bersih.
+  docClone.querySelectorAll('.open').forEach(el=>el.classList.remove('open'));
+
+  const fullHTML = '<!DOCTYPE html>\n' + docClone.outerHTML;
+  const blob = new Blob([fullHTML], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'website-kelas.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  logAdminActivity('Export source code HTML', { catatan: 'Data siswa, wali kelas, dan galeri ditanam ke file' });
+  flashStatus(document.getElementById('exportStatus'));
+}
+document.getElementById('exportSourceBtn').addEventListener('click', exportSourceHTML);
+
+document.getElementById('closePanel').addEventListener('click', ()=>adminPanel.classList.remove('open'));
+adminPanel.addEventListener('click', e=>{ if(e.target===adminPanel) adminPanel.classList.remove('open'); });
+document.getElementById('logoutBtn').addEventListener('click', ()=>{
+  logAdminActivity('Logout', { username: currentAdminUsername });
+  isAdmin=false;
+  currentAdminUsername = null;
+  adminPanel.classList.remove('open');
+});
+
+document.querySelectorAll('.panel-tab').forEach(tab=>{
+  tab.addEventListener('click', ()=>{
+    document.querySelectorAll('.panel-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.panel-section').forEach(s=>s.classList.remove('active'));
+    tab.classList.add('active');
+    const name = tab.dataset.tab.charAt(0).toUpperCase()+tab.dataset.tab.slice(1);
+    document.getElementById('tab'+name).classList.add('active');
+  });
+});
+
+function openAdminPanel(){
+  renderGuruAdmin();
+  renderSiswaAdmin();
+  renderGaleriAdmin();
+  renderIpAdmin();
+  renderCommentAdmin();
+  adminPanel.classList.add('open');
+}
+
+async function renderIpAdmin(){
+  const banBtn = document.getElementById('banIpBtn');
+  const banInput = document.getElementById('banIpInput');
+  const bannedList = document.getElementById('bannedIpList');
+  const logList = document.getElementById('visitorLogList');
+  const vpnToggle = document.getElementById('blockVpnToggle');
+
+  vpnToggle.checked = await getBlockVpnSetting();
+  vpnToggle.onchange = ()=>{
+    setBlockVpnSetting(vpnToggle.checked);
+    logAdminActivity('Pengaturan blokir VPN diubah', { aktif: vpnToggle.checked });
+  };
+
+  async function refreshBannedList(){
+    bannedList.innerHTML = '<p class="upload-hint">Memuat...</p>';
+    try{
+      const list = await window.storage.list('banned-ip:', true);
+      bannedList.innerHTML = '';
+      if(!list || !list.keys || list.keys.length===0){
+        bannedList.innerHTML = '<p class="upload-hint">Belum ada IP yang diblokir.</p>';
+        return;
+      }
+      list.keys.forEach(k=>{
+        const ip = k.replace('banned-ip:', '');
+        const row = document.createElement('div'); row.className='admin-row';
+        const info = document.createElement('div'); info.className='info';
+        info.innerHTML = `<h5>${escapeHtml(ip)}</h5><span>Diblokir</span>`;
+        const unbanBtn = document.createElement('button'); unbanBtn.className='btn-small'; unbanBtn.textContent='Buka Blokir';
+        unbanBtn.addEventListener('click', async ()=>{
+          await window.storage.delete(k, true);
+          logAdminActivity('IP dibuka blokirnya', { ip });
+          refreshBannedList();
+        });
+        row.appendChild(info); row.appendChild(unbanBtn);
+        bannedList.appendChild(row);
+      });
+    }catch(e){ bannedList.innerHTML = '<p class="upload-hint">Gagal memuat daftar.</p>'; }
+  }
+
+  async function refreshLogList(){
+    logList.innerHTML = '<p class="upload-hint">Memuat...</p>';
+    try{
+      const list = await window.storage.list('visitor-log:', true);
+      if(!list || !list.keys || list.keys.length===0){
+        logList.innerHTML = '<p class="upload-hint">Belum ada data pengunjung.</p>';
+        return;
+      }
+      const entries = [];
+      for(const k of list.keys){
+        const r = await window.storage.get(k, true);
+        if(r){ try{ entries.push(JSON.parse(r.value)); }catch(e){} }
+      }
+      entries.sort((a,b)=> new Date(b.time) - new Date(a.time));
+      logList.innerHTML = '';
+      entries.slice(0, 50).forEach(entry=>{
+        const row = document.createElement('div'); row.className='admin-row';
+        const waktu = new Date(entry.time).toLocaleString('id-ID');
+        const info = document.createElement('div'); info.className='info';
+        info.innerHTML = `<h5>${escapeHtml(entry.ip || 'Tidak terdeteksi')}</h5><span>${escapeHtml(waktu)}</span>`;
+        const btn = document.createElement('button'); btn.className='btn-small danger'; btn.textContent='Ban IP ini';
+        if(!entry.ip){ btn.disabled = true; btn.style.opacity='0.4'; }
+        btn.addEventListener('click', async ()=>{
+          await window.storage.set('banned-ip:'+entry.ip, JSON.stringify({time:Date.now()}), true);
+          logAdminActivity('IP diblokir dari riwayat pengunjung', { ip: entry.ip });
+          refreshBannedList();
+        });
+        row.appendChild(info); row.appendChild(btn);
+        logList.appendChild(row);
+      });
+    }catch(e){ logList.innerHTML = '<p class="upload-hint">Gagal memuat riwayat.</p>'; }
+  }
+
+  banBtn.onclick = async ()=>{
+    const ip = banInput.value.trim();
+    if(!ip) return;
+    await window.storage.set('banned-ip:'+ip, JSON.stringify({time:Date.now()}), true);
+    logAdminActivity('IP diblokir manual', { ip });
+    banInput.value = '';
+    refreshBannedList();
+  };
+
+  refreshBannedList();
+  refreshLogList();
+}
+
+function flashStatus(el){
+  el.style.display='block';
+  setTimeout(()=>el.style.display='none', 2000);
+}
+
+function renderGuruAdmin(){
+  const row = document.getElementById('guruAdminRow');
+  row.innerHTML = '';
+  row.style.flexDirection = 'column';
+  row.style.alignItems = 'stretch';
+  row.style.gap = '12px';
+
+  const topRow = document.createElement('div');
+  topRow.style.display='flex'; topRow.style.alignItems='center'; topRow.style.gap='14px'; topRow.style.flexWrap='wrap';
+  topRow.appendChild(avatarNode(GURU));
+
+  const nameInput = document.createElement('input');
+  nameInput.type='text'; nameInput.value = GURU.name; nameInput.placeholder='Nama wali kelas';
+  nameInput.style.flex='1'; nameInput.style.minWidth='160px';
+
+  const roleInput = document.createElement('input');
+  roleInput.type='text'; roleInput.value = GURU.role; roleInput.placeholder='Jabatan';
+  roleInput.style.width='140px';
+
+  topRow.appendChild(nameInput);
+  topRow.appendChild(roleInput);
+  row.appendChild(topRow);
+
+  const btnRow = document.createElement('div');
+  btnRow.style.display='flex'; btnRow.style.gap='10px'; btnRow.style.alignItems='center'; btnRow.style.flexWrap='wrap';
+
+  const saveBtn = document.createElement('button');
+  saveBtn.className='btn-small'; saveBtn.textContent='Simpan Nama & Jabatan';
+  saveBtn.addEventListener('click', async ()=>{
+    const newName = nameInput.value.trim() || GURU.name;
+    const newRole = roleInput.value.trim() || GURU.role;
+    const dataLama = { nama: GURU.name, jabatan: GURU.role };
+    await setPhoto('name:guru', newName);
+    await setPhoto('role:guru', newRole);
+    GURU.name = newName; GURU.role = newRole;
+    logAdminActivity('Data Wali Kelas diganti', { sebelum: dataLama, sesudah: { nama: newName, jabatan: newRole } });
+    renderGuru(); renderGuruAdmin();
+    flashStatus(document.getElementById('guruStatus'));
+  });
+
+  const fileInput = document.createElement('input');
+  fileInput.type='file'; fileInput.accept='image/*';
+  fileInput.addEventListener('change', async ()=>{
+    if(!fileInput.files[0]) return;
+    const dataUrl = await compressImage(fileInput.files[0]);
+    await setPhoto('photo:guru', dataUrl);
+    GURU.photo = dataUrl;
+    logAdminActivity('Foto Wali Kelas diganti', { nama: GURU.name });
+    renderGuru(); renderGuruAdmin();
+    flashStatus(document.getElementById('guruStatus'));
+  });
+
+  btnRow.appendChild(saveBtn);
+  btnRow.appendChild(fileInput);
+  row.appendChild(btnRow);
+}
+
+function renderSiswaAdmin(){
+  const list = document.getElementById('siswaAdminList');
+  const search = document.getElementById('siswaSearch');
+  function draw(filter=''){
+    list.innerHTML = '';
+    ANGGOTA.filter(p=>p.name.toLowerCase().includes(filter.toLowerCase())).forEach(p=>{
+      const row = document.createElement('div'); row.className='admin-row'; row.style.flexWrap='wrap';
+      row.appendChild(avatarNode(p));
+
+      const nameInput = document.createElement('input');
+      nameInput.type='text'; nameInput.value=p.name; nameInput.placeholder='Nama'; nameInput.style.width='150px';
+
+      const roleInput = document.createElement('input');
+      roleInput.type='text'; roleInput.value=p.role; roleInput.placeholder='Jabatan / Anggota Kelas'; roleInput.style.width='150px';
+
+      const musicInput = document.createElement('input');
+      musicInput.type='text'; musicInput.value=p.music||''; musicInput.placeholder='Link lagu Spotify (opsional)'; musicInput.style.width='230px';
+
+      const rowStatus = document.createElement('span');
+      rowStatus.className='admin-status'; rowStatus.style.width='100%'; rowStatus.style.marginTop='0';
+
+      const saveBtn = document.createElement('button');
+      saveBtn.className='btn-small'; saveBtn.textContent='Simpan';
+      saveBtn.addEventListener('click', async ()=>{
+        const newName = nameInput.value.trim() || p.name;
+        const newRole = roleInput.value.trim() || p.role;
+        const musicRaw = musicInput.value.trim();
+        const dataLama = { nama: p.name, jabatan: p.role, musik: p.music };
+
+        let newMusic = p.music || null;
+        let musicInvalid = false;
+        if(musicRaw === ''){
+          newMusic = null;
+        } else if(spotifyEmbedUrl(musicRaw)){
+          newMusic = musicRaw;
+        } else {
+          musicInvalid = true; // link diisi tapi bukan link Spotify yang valid -> tidak disimpan
+        }
+
+        await setPhoto('name:siswa:'+p.id, newName);
+        await setPhoto('role:siswa:'+p.id, newRole);
+        if(!musicInvalid) await setPhoto('music:siswa:'+p.id, newMusic || '');
+
+        [PENGURUS, ANGGOTA].forEach(arr=>{
+          arr.forEach(q=>{
+            if(q.id===p.id){
+              q.name=newName; q.role=newRole;
+              if(!musicInvalid) q.music=newMusic;
+            }
+          });
+        });
+        logAdminActivity('Data siswa diganti', { sebelum: dataLama, sesudah: { nama: newName, jabatan: newRole, musik: musicInvalid ? p.music : newMusic } });
+
+        rowStatus.textContent = musicInvalid
+          ? '⚠️ Link Spotify tidak valid, bagian lain tersimpan.'
+          : 'Data tersimpan ✓';
+        rowStatus.style.color = musicInvalid ? 'var(--coral)' : 'var(--sage)';
+        flashStatus(rowStatus);
+
+        renderPengurus(); renderAnggota();
+        setTimeout(()=>draw(search.value), 1700); // beri waktu notifikasi terlihat dulu sebelum baris ditata ulang
+      });
+
+      const fileInput = document.createElement('input');
+      fileInput.type='file'; fileInput.accept='image/*';
+      fileInput.addEventListener('change', async ()=>{
+        if(!fileInput.files[0]) return;
+        const dataUrl = await compressImage(fileInput.files[0]);
+        await setPhoto('photo:siswa:'+p.id, dataUrl);
+        [PENGURUS, ANGGOTA].forEach(arr=>{
+          arr.forEach(q=>{ if(q.id===p.id) q.photo = dataUrl; });
+        });
+        logAdminActivity('Foto siswa diganti', { nama: p.name });
+        renderPengurus(); renderAnggota(); draw(search.value);
+      });
+
+      row.appendChild(nameInput);
+      row.appendChild(roleInput);
+      row.appendChild(musicInput);
+      row.appendChild(saveBtn);
+      row.appendChild(fileInput);
+      row.appendChild(rowStatus);
+      list.appendChild(row);
+    });
+  }
+  search.oninput = ()=>draw(search.value);
+  draw();
+}
+
+function renderGaleriAdmin(){
+  const grid = document.getElementById('galAdminGrid');
+  grid.innerHTML = '';
+  GALERI.forEach((g, idx)=>{
+    const card = document.createElement('div'); card.className='gal-admin-card';
+    const img = document.createElement('img'); img.src = g.url; card.appendChild(img);
+    const capInput = document.createElement('input'); capInput.type='text'; capInput.value = g.caption;
+    card.appendChild(capInput);
+    const fileInput = document.createElement('input'); fileInput.type='file'; fileInput.accept='image/*';
+    card.appendChild(fileInput);
+    const btnRow = document.createElement('div');
+    const saveBtn = document.createElement('button'); saveBtn.className='btn-small'; saveBtn.textContent='Simpan';
+    btnRow.appendChild(saveBtn);
+    if(g._key){
+      const delBtn = document.createElement('button'); delBtn.className='btn-small danger'; delBtn.style.marginLeft='6px'; delBtn.textContent='Hapus';
+      delBtn.addEventListener('click', async ()=>{
+        await window.storage.delete(g._key, true);
+        GALERI.splice(idx,1);
+        logAdminActivity('Foto galeri dihapus', { caption: g.caption });
+        renderGaleri(); renderGaleriAdmin();
+      });
+      btnRow.appendChild(delBtn);
+    }
+    card.appendChild(btnRow);
+    saveBtn.addEventListener('click', async ()=>{
+      let url = g.url;
+      if(fileInput.files[0]) url = await compressImage(fileInput.files[0]);
+      const caption = capInput.value.trim() || g.caption;
+      const data = { url, caption };
+      if(g._key){ await window.storage.set(g._key, JSON.stringify(data), true); }
+      else { await setPhoto('galeri:base:'+idx, JSON.stringify(data)); }
+      GALERI[idx] = { ...g, ...data };
+      logAdminActivity('Foto galeri diperbarui', { caption });
+      renderGaleri(); renderGaleriAdmin();
+    });
+    grid.appendChild(card);
+  });
+}
+
+document.getElementById('addGalBtn').addEventListener('click', async ()=>{
+  const fileInput = document.getElementById('newGalFile');
+  const captionInput = document.getElementById('newGalCaption');
+  if(!fileInput.files[0]){ alert('Pilih foto terlebih dahulu.'); return; }
+  const url = await compressImage(fileInput.files[0]);
+  const caption = captionInput.value.trim() || 'Momen kelas';
+  const key = 'galeri:custom:'+Date.now();
+  await window.storage.set(key, JSON.stringify({ url, caption }), true);
+  GALERI.push({ url, caption, _key:key });
+  logAdminActivity('Foto baru ditambahkan ke galeri', { caption });
+  fileInput.value=''; captionInput.value='';
+  renderGaleri(); renderGaleriAdmin();
+});
+
+/* ============================= KOMENTAR & RATING (tanpa database — pakai penyimpanan shared) ============================= */
+const starPicker = document.getElementById('starPicker');
+const commentNameInput = document.getElementById('commentName');
+const commentTextInput = document.getElementById('commentText');
+const commentErrorEl = document.getElementById('commentError');
+const submitCommentBtn = document.getElementById('submitCommentBtn');
+let selectedStar = 0;
+
+function updateStarPickerUI(){
+  starPicker.querySelectorAll('span').forEach(s=>{
+    s.classList.toggle('active', parseInt(s.dataset.star,10) <= selectedStar);
+  });
+}
+starPicker.querySelectorAll('span').forEach(starEl=>{
+  starEl.addEventListener('click', ()=>{
+    selectedStar = parseInt(starEl.dataset.star, 10);
+    updateStarPickerUI();
+  });
+});
+
+function starString(n){
+  return '★★★★★'.slice(0, n) + '☆☆☆☆☆'.slice(0, 5-n);
+}
+
+// Semua komentar disimpan sebagai entri terpisah lewat window.storage (shared:true),
+// jadi begitu ada yang kirim komentar, langsung kesimpen dan langsung kelihatan buat
+// semua pengunjung lain — tanpa perlu database/server tambahan.
+async function loadComments(){
+  try{
+    const list = await window.storage.list('komentar:', true);
+    if(!list || !list.keys || list.keys.length===0) return [];
+    const items = [];
+    for(const k of list.keys){
+      const r = await window.storage.get(k, true);
+      if(r){ try{ items.push({ key:k, ...JSON.parse(r.value) }); }catch(e){} }
+    }
+    items.sort((a,b)=> new Date(b.time) - new Date(a.time));
+    return items;
+  }catch(e){ return []; }
+}
+
+function renderRatingSummary(items){
+  const el = document.getElementById('ratingSummary');
+  el.innerHTML = '';
+  if(!items.length) return;
+  const withStars = items.filter(c=>c.stars>0);
+  const avg = withStars.length ? (withStars.reduce((s,c)=>s+c.stars,0)/withStars.length) : 0;
+  const num = document.createElement('div'); num.className='avg-num'; num.textContent = avg ? avg.toFixed(1) : '–';
+  const right = document.createElement('div');
+  const stars = document.createElement('div'); stars.className='avg-stars'; stars.textContent = starString(Math.round(avg));
+  const count = document.createElement('div'); count.className='avg-count';
+  count.textContent = `${items.length} komentar${withStars.length ? ' · '+withStars.length+' rating' : ''}`;
+  right.appendChild(stars); right.appendChild(count);
+  el.appendChild(num); el.appendChild(right);
+}
+
+function renderCommentList(items){
+  const list = document.getElementById('commentList');
+  list.innerHTML = '';
+  if(!items.length){
+    const empty = document.createElement('p'); empty.className='upload-hint';
+    empty.textContent = 'Belum ada komentar. Jadilah yang pertama kirim kesan & pesan!';
+    list.appendChild(empty);
+    return;
+  }
+  items.forEach(c=>{
+    const card = document.createElement('div'); card.className='comment-card';
+    const head = document.createElement('div'); head.className='head';
+    const name = document.createElement('div'); name.className='name'; name.textContent = c.name || 'Anonim';
+    head.appendChild(name);
+    if(c.stars > 0){
+      const starsEl = document.createElement('div'); starsEl.className='stars'; starsEl.textContent = starString(c.stars);
+      head.appendChild(starsEl);
+    }
+    card.appendChild(head);
+    const text = document.createElement('div'); text.className='text'; text.textContent = c.text; // textContent = otomatis aman dari XSS
+    card.appendChild(text);
+    const time = document.createElement('div'); time.className='time';
+    time.textContent = c.time ? new Date(c.time).toLocaleString('id-ID') : '';
+    card.appendChild(time);
+    list.appendChild(card);
+  });
+}
+
+async function refreshComments(){
+  const items = await loadComments();
+  renderRatingSummary(items);
+  renderCommentList(items);
+  return items;
+}
+
+submitCommentBtn.addEventListener('click', async ()=>{
+  const name = commentNameInput.value.trim();
+  const text = commentTextInput.value.trim();
+  commentErrorEl.style.display = 'none';
+  if(!name || !text){
+    commentErrorEl.textContent = 'Isi nama dan komentar dulu ya.';
+    commentErrorEl.style.display = 'block';
+    return;
+  }
+  submitCommentBtn.disabled = true;
+  submitCommentBtn.style.opacity = '0.6';
+  try{
+    const key = 'komentar:' + Date.now() + '-' + Math.random().toString(36).slice(2,7);
+    const data = { name: name.slice(0,40), text: text.slice(0,300), stars: selectedStar, time: new Date().toISOString() };
+    await window.storage.set(key, JSON.stringify(data), true);
+    commentNameInput.value = '';
+    commentTextInput.value = '';
+    selectedStar = 0;
+    updateStarPickerUI();
+    await refreshComments();
+  }catch(e){
+    commentErrorEl.textContent = 'Gagal mengirim komentar, coba lagi sebentar lagi.';
+    commentErrorEl.style.display = 'block';
+  }
+  submitCommentBtn.disabled = false;
+  submitCommentBtn.style.opacity = '1';
+});
+commentTextInput.addEventListener('keydown', e=>{
+  if(e.key==='Enter' && (e.metaKey || e.ctrlKey)) submitCommentBtn.click();
+});
+
+async function renderCommentAdmin(){
+  const container = document.getElementById('commentAdminList');
+  container.innerHTML = '<p class="upload-hint">Memuat...</p>';
+  const items = await loadComments();
+  container.innerHTML = '';
+  if(!items.length){
+    container.innerHTML = '<p class="upload-hint">Belum ada komentar.</p>';
+    return;
+  }
+  items.forEach(c=>{
+    const row = document.createElement('div'); row.className='admin-row';
+    const info = document.createElement('div'); info.className='info';
+    const label = c.name ? `${c.name}${c.stars>0 ? ' · '+c.stars+'★' : ''}` : 'Anonim';
+    info.innerHTML = `<h5>${escapeHtml(label)}</h5><span>${escapeHtml(c.text)}</span>`;
+    const delBtn = document.createElement('button'); delBtn.className='btn-small danger'; delBtn.textContent='Hapus';
+    delBtn.addEventListener('click', async ()=>{
+      await window.storage.delete(c.key, true);
+      logAdminActivity('Komentar dihapus', { nama: c.name, teks: c.text });
+      renderCommentAdmin();
+      refreshComments();
+    });
+    row.appendChild(info); row.appendChild(delBtn);
+    container.appendChild(row);
+  });
+}
+
+/* ============================= INIT ============================= */
+/* ============================= NAV MOBILE (DROPDOWN) ============================= */
+const navToggle = document.getElementById('navToggle');
+const navLinks = document.getElementById('navLinks');
+navToggle.addEventListener('click', ()=>{
+  const isOpen = navLinks.classList.toggle('open');
+  navToggle.classList.toggle('open', isOpen);
+  navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+});
+navLinks.querySelectorAll('.nav-link').forEach(link=>{
+  link.addEventListener('click', ()=>{
+    navLinks.classList.remove('open');
+    navToggle.classList.remove('open');
+    navToggle.setAttribute('aria-expanded', 'false');
+  });
+});
+document.addEventListener('click', (e)=>{
+  if(navLinks.classList.contains('open') && !navLinks.contains(e.target) && !navToggle.contains(e.target)){
+    navLinks.classList.remove('open');
+    navToggle.classList.remove('open');
+    navToggle.setAttribute('aria-expanded', 'false');
+  }
+});
+document.addEventListener('keydown', (e)=>{
+  if(e.key==='Escape' && navLinks.classList.contains('open')){
+    navLinks.classList.remove('open');
+    navToggle.classList.remove('open');
+    navToggle.setAttribute('aria-expanded', 'false');
+  }
+});
+
+/* ============================= ANIMASI: SCROLL REVEAL ============================= */
+(function(){
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduceMotion) return;
+
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add('in-view');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold:0.12, rootMargin:'0px 0px -60px 0px' });
+
+  function prep(el, cls, delayMs){
+    if(!el || el.dataset.animPrepared) return;
+    el.dataset.animPrepared = '1';
+    el.classList.add(cls);
+    if(delayMs) el.style.transitionDelay = delayMs + 'ms';
+    io.observe(el);
+  }
+
+  // setiap section masuk dengan fade-up
+  document.querySelectorAll('section').forEach(sec=>prep(sec, 'reveal', 0));
+
+  // jadwal & kartu wali kelas sudah ada di HTML sejak awal
+  document.querySelectorAll('.jadwal-card').forEach((el,i)=>prep(el, 'reveal-left', (i%4)*90));
+  prep(document.querySelector('.teacher-card'), 'reveal-zoom', 0);
+
+  // grid yang diisi lewat JS (pengurus, anggota, galeri, komentar) -> pantau perubahan & beri stagger
+  const gridIds = ['pengurusGrid','anggotaGrid','galeriGrid','commentList'];
+  gridIds.forEach(id=>{
+    const el = document.getElementById(id);
+    if(!el) return;
+    const animateChildren = ()=>{
+      Array.from(el.children).forEach((child,i)=>{
+        prep(child, 'reveal-zoom', (i % 10) * 60);
+      });
+    };
+    animateChildren();
+    new MutationObserver(animateChildren).observe(el, { childList:true });
+  });
+})();
+
+(async function init(){
+  await loadAllPhotos();
+  renderGuru();
+  renderPengurus();
+  renderAnggota();
+  renderGaleri();
+  refreshComments();
+})();
+
+/* ======================================================= */
+/* ==========  INTERAKSI TAMBAHAN (BANYAK & SERU)  ======== */
+/* ======================================================= */
+(function(){
+  const finePointer = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------------- 1. EFEK SUARA (Web Audio API, tanpa file) ---------------- */
+  const SFX = (function(){
+    let ctx = null;
+    let muted = false;
+    function getCtx(){
+      if(!ctx){ ctx = new (window.AudioContext || window.webkitAudioContext)(); }
+      return ctx;
+    }
+    function tone(freq, duration, type, vol, delay){
+      if(muted || reduceMotion) return;
+      try{
+        const c = getCtx();
+        if(c.state === 'suspended') c.resume();
+        const osc = c.createOscillator();
+        const gain = c.createGain();
+        osc.type = type || 'sine';
+        osc.frequency.value = freq;
+        const t0 = c.currentTime + (delay || 0);
+        gain.gain.setValueAtTime(0.0001, t0);
+        gain.gain.linearRampToValueAtTime(vol, t0 + 0.008);
+        gain.gain.exponentialRampToValueAtTime(0.001, t0 + duration);
+        osc.connect(gain); gain.connect(c.destination);
+        osc.start(t0);
+        osc.stop(t0 + duration + 0.03);
+      }catch(e){ /* abaikan jika audio tidak didukung */ }
+    }
+    return {
+      click(){ tone(740, 0.06, 'square', 0.045); },
+      pop(){ tone(500, 0.09, 'sine', 0.06); tone(760, 0.08, 'sine', 0.045, 0.035); },
+      tick(){ tone(920, 0.045, 'triangle', 0.04); },
+      success(){ tone(523, 0.09, 'sine', 0.06); tone(659, 0.09, 'sine', 0.055, 0.09); tone(784, 0.16, 'sine', 0.06, 0.18); },
+      error(){ tone(220, 0.18, 'sawtooth', 0.045); },
+      whoosh(){ tone(300, 0.2, 'sine', 0.04); tone(180, 0.22, 'sine', 0.035, 0.05); },
+      toggleMute(){ muted = !muted; return muted; },
+      isMuted(){ return muted; }
+    };
+  })();
+
+  const soundFab = document.getElementById('soundFab');
+  if(soundFab){
+    soundFab.addEventListener('click', ()=>{
+      const isMuted = SFX.toggleMute();
+      soundFab.textContent = isMuted ? '🔇' : '🔊';
+      soundFab.title = isMuted ? 'Suara efek: mati' : 'Suara efek: aktif';
+      if(!isMuted) SFX.click();
+    });
+  }
+
+  /* ---------------- 2. TOAST MINI ---------------- */
+  let toastTimer = null;
+  function showToast(msg){
+    const toast = document.getElementById('miniToast');
+    if(!toast) return;
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=> toast.classList.remove('show'), 2400);
+  }
+
+  /* ---------------- 3. CONFETTI ---------------- */
+  function burstConfetti(x, y, count){
+    if(reduceMotion) return;
+    const colors = ['#2F6FED', '#E3A008', '#D6483A', '#4C8C6B', '#123A66'];
+    const n = count || 24;
+    for(let i=0; i<n; i++){
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      const size = 6 + Math.random()*6;
+      const angle = Math.random()*Math.PI*2;
+      const dist = 50 + Math.random()*130;
+      const dx = Math.cos(angle)*dist;
+      const dy = Math.sin(angle)*dist - 30;
+      const rot = (Math.random()*720 - 360) + 'deg';
+      el.style.left = x + 'px';
+      el.style.top = y + 'px';
+      el.style.width = size + 'px';
+      el.style.height = (size*0.42) + 'px';
+      el.style.background = colors[i % colors.length];
+      el.style.setProperty('--dx', dx + 'px');
+      el.style.setProperty('--dy', dy + 'px');
+      el.style.setProperty('--rot', rot);
+      document.body.appendChild(el);
+      el.addEventListener('animationend', ()=> el.remove());
+    }
+  }
+
+  /* ---------------- 4. KURSOR KUSTOM + JEJAK KAPUR ---------------- */
+  if(finePointer && !reduceMotion){
+    const dot = document.createElement('div'); dot.id = 'cursorDot';
+    const ring = document.createElement('div'); ring.id = 'cursorRing';
+    document.body.appendChild(dot);
+    document.body.appendChild(ring);
+    let mx = window.innerWidth/2, my = window.innerHeight/2, rx = mx, ry = my;
+    let lastTrail = 0;
+    const HOVER_SELECTOR = 'a, button, .id-card, .mini, .polaroid, .achieve-card, .jadwal-card, .teacher-card, input, textarea, #starPicker span';
+
+    function spawnTrail(x, y){
+      const now = Date.now();
+      if(now - lastTrail < 55) return;
+      lastTrail = now;
+      const t = document.createElement('div');
+      t.className = 'chalk-trail';
+      const s = 3 + Math.random()*3;
+      t.style.left = x + 'px'; t.style.top = y + 'px';
+      t.style.width = s + 'px'; t.style.height = s + 'px';
+      t.style.transform = 'translate(-50%,-50%)';
+      t.style.animation = 'chalkFade 650ms ease forwards';
+      document.body.appendChild(t);
+      setTimeout(()=> t.remove(), 700);
+    }
+
+    document.addEventListener('mousemove', (e)=>{
+      mx = e.clientX; my = e.clientY;
+      dot.style.left = mx + 'px'; dot.style.top = my + 'px';
+      ring.classList.toggle('active', !!e.target.closest(HOVER_SELECTOR));
+      spawnTrail(mx, my);
+    });
+    document.addEventListener('mousedown', ()=> ring.classList.add('press'));
+    document.addEventListener('mouseup', ()=> ring.classList.remove('press'));
+    document.addEventListener('mouseleave', ()=>{ dot.style.opacity = '0'; ring.style.opacity = '0'; });
+    document.addEventListener('mouseenter', ()=>{ dot.style.opacity = '1'; ring.style.opacity = '1'; });
+
+    (function loop(){
+      rx += (mx - rx) * 0.2; ry += (my - ry) * 0.2;
+      ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+      requestAnimationFrame(loop);
+    })();
+  }
+
+  /* ---------------- 5. TILT 3D UNTUK KARTU-KARTU ---------------- */
+  if(finePointer && !reduceMotion){
+    const TILT_SELECTOR = '.id-card, .teacher-card, .achieve-card, .jadwal-card, .polaroid';
+    let tiltEl = null;
+    document.addEventListener('mousemove', (e)=>{
+      const card = e.target.closest(TILT_SELECTOR);
+      if(card){
+        const r = card.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width - 0.5;
+        const py = (e.clientY - r.top) / r.height - 0.5;
+        const rotY = px * 14, rotX = -py * 14;
+        card.style.transition = 'transform 70ms ease-out';
+        card.style.transform = `perspective(700px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateY(-6px) scale(1.03)`;
+        tiltEl = card;
+      } else if(tiltEl){
+        tiltEl.style.transition = 'transform 450ms cubic-bezier(.2,.8,.3,1)';
+        tiltEl.style.transform = '';
+        tiltEl = null;
+      }
+    });
+  }
+
+  /* ---------------- 6. RIPPLE DI TOMBOL ---------------- */
+  const RIPPLE_SELECTOR = '.btn-primary, .btn-small, .admin-fab, .sound-fab, .panel-tab';
+  document.addEventListener('click', (e)=>{
+    const btn = e.target.closest(RIPPLE_SELECTOR);
+    if(!btn || reduceMotion) return;
+    const r = btn.getBoundingClientRect();
+    const size = Math.max(r.width, r.height) * 1.4;
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple-el';
+    ripple.style.width = ripple.style.height = size + 'px';
+    ripple.style.left = (e.clientX - r.left - size/2) + 'px';
+    ripple.style.top = (e.clientY - r.top - size/2) + 'px';
+    btn.appendChild(ripple);
+    setTimeout(()=> ripple.remove(), 600);
+  });
+
+  /* ---------------- 7. SUARA KLIK GLOBAL (delegasi, aman untuk konten dinamis) ---------------- */
+  const CLICK_SOUND_SELECTOR = 'a.nav-link, .btn-primary, .btn-small, .admin-fab, .sound-fab, .panel-tab, .close-btn, .panel-close, #starPicker span, .mini, .id-card, .teacher-card, .polaroid';
+  document.addEventListener('click', (e)=>{
+    const el = e.target.closest(CLICK_SOUND_SELECTOR);
+    if(!el) return;
+    if(el.id === 'soundFab') return; // sudah ditangani sendiri
+    if(el.matches('#starPicker span')) SFX.tick();
+    else if(el.matches('.mini, .id-card, .teacher-card, .polaroid')) SFX.pop();
+    else SFX.click();
+  });
+
+  /* ---------------- 8. ACHIEVEMENT: KLIK = RAYAKAN DENGAN CONFETTI ---------------- */
+  document.addEventListener('click', (e)=>{
+    const ach = e.target.closest('.achieve-card');
+    if(!ach) return;
+    burstConfetti(e.clientX, e.clientY, 30);
+    SFX.pop();
+    ach.classList.remove('celebrated');
+    void ach.offsetWidth; // restart animasi
+    ach.classList.add('celebrated');
+  });
+
+  /* ---------------- 9. BADGE "HARI INI" DI JADWAL MAPEL ---------------- */
+  (function highlightToday(){
+    const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+    const today = days[new Date().getDay()];
+    document.querySelectorAll('.jadwal-card h4').forEach(h4=>{
+      if(h4.textContent.trim() === today){
+        const card = h4.closest('.jadwal-card');
+        if(!card || card.querySelector('.today-badge')) return;
+        card.classList.add('today');
+        const badge = document.createElement('span');
+        badge.className = 'today-badge';
+        badge.textContent = 'Hari ini';
+        h4.after(badge);
+      }
+    });
+  })();
+
+  /* ---------------- 10. EASTER EGG: KLIK LOGO 5X = PESTA CONFETTI ---------------- */
+  (function logoEasterEgg(){
+    const brand = document.querySelector('.nav-brand');
+    if(!brand) return;
+    let count = 0, resetTimer = null;
+    brand.addEventListener('click', (e)=>{
+      count++;
+      clearTimeout(resetTimer);
+      resetTimer = setTimeout(()=> count = 0, 2200);
+      if(count >= 5){
+        count = 0;
+        SFX.success();
+        showToast('Semangat kelas XI-F5! 🎉');
+        const cx = window.innerWidth/2;
+        for(let i=0;i<3;i++){
+          setTimeout(()=> burstConfetti(Math.random()*window.innerWidth, window.innerHeight*0.25, 36), i*160);
+        }
+      }
+    });
+  })();
+
+  /* ---------------- 11. FORM KOMENTAR: CONFETTI SAAT SUKSES, GOYANG SAAT GAGAL ---------------- */
+  (function enhanceCommentForm(){
+    const btn = document.getElementById('submitCommentBtn');
+    const form = document.querySelector('.comment-form');
+    if(!btn || !form) return;
+    // Pantau perubahan pada elemen error: jika muncul -> goyang & bunyi error.
+    const errEl = document.getElementById('commentError');
+    if(errEl){
+      const mo = new MutationObserver(()=>{
+        if(errEl.style.display !== 'none' && errEl.textContent){
+          SFX.error();
+          form.classList.remove('shake-error');
+          void form.offsetWidth;
+          form.classList.add('shake-error');
+        }
+      });
+      mo.observe(errEl, { attributes:true, attributeFilter:['style'], childList:true, characterData:true, subtree:true });
+    }
+    // Deteksi sukses: pantau perubahan pada commentList (komentar baru masuk = form berhasil terkirim)
+    const list = document.getElementById('commentList');
+    if(list){
+      let firstRun = true;
+      const mo2 = new MutationObserver(()=>{
+        if(firstRun){ firstRun = false; return; }
+        const r = btn.getBoundingClientRect();
+        burstConfetti(r.left + r.width/2, r.top + r.height/2, 26);
+        SFX.success();
+      });
+      mo2.observe(list, { childList:true });
+    }
+  })();
+
+  /* ---------------- 12. SCROLL PROGRESS BAR DI NAV ---------------- */
+  (function scrollProgress(){
+    const bar = document.createElement('div');
+    bar.style.cssText = 'position:fixed; top:0; left:0; height:3px; width:0%; z-index:101; background:linear-gradient(90deg,var(--sky),var(--mustard)); transition:width 0.1s linear;';
+    document.body.appendChild(bar);
+    window.addEventListener('scroll', ()=>{
+      const h = document.documentElement;
+      const pct = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+      bar.style.width = (isFinite(pct) ? pct : 0) + '%';
+    }, { passive:true });
+  })();
+})();
+</script>
+</body>
+</html>
